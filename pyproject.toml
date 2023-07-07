@@ -10,6 +10,9 @@ packages = [{include = "ice_poker_tabletamer"}]
 python = "^3.10"
 PyQt6 = "^6.5.1"
 PyAutoGUI = "^0.9.54"
+mypy = "^1.4.1"
+black = "^23.3.0"
+isort = "^5.12.0"
 
 
 [build-system]
