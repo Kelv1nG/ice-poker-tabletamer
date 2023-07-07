@@ -1,11 +1,9 @@
 1. define string search in google chrome
 2. get dimensions of it
+3. border overlays on the tables
 
 
 
 
 
 layout-grid
-
-
-
