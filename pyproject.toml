@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "ice-poker-tabletamer"
+version = "0.1.0"
+description = ""
+authors = ["Kelv1nG <kelvinmaglipon@gmail.com>"]
+readme = "README.md"
+packages = [{include = "ice_poker_tabletamer"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyqt6 = "^6.5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
