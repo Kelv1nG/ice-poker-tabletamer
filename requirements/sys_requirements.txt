@@ -1,0 +1,11 @@
+1. define string search in google chrome
+2. get dimensions of it
+
+
+
+
+
+layout-grid
+
+
+
