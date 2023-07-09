@@ -1,7 +1,7 @@
 import sys
 
-from PyQt6.QtWidgets import QApplication
 from overlay import Overlay
+from PyQt6.QtWidgets import QApplication
 
 
 class OverlayManager:
@@ -9,9 +9,9 @@ class OverlayManager:
         ...
 
     def create_overlay(self):
-        app = QApplication.instance()
-        overlay = Overlay(None)
-        overlay.showNormal()
+        overlay = Overlay()
+        overlay.show()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

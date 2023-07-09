@@ -1,9 +1,12 @@
+import sys
+
 from PyQt6 import QtCore, QtWidgets
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QApplication, QWidget
+
 
 class Overlay(QWidget):
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.setWindowFlags(
             QtCore.Qt.WindowType.WindowStaysOnTopHint
             | QtCore.Qt.WindowType.FramelessWindowHint
@@ -19,6 +22,13 @@ class Overlay(QWidget):
                 screen_geometry,
             )
         )
-        
+
     def mousePressEvent(self, event):
         QtWidgets.QApplication.quit()
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    overlay = Overlay()
+    overlay.show()
+    app.exec()
