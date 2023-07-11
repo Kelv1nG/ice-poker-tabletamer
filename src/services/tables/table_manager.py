@@ -22,6 +22,8 @@ class TableConfiguration:
         """
         try:
             self.table = pyautogui.getWindowsWithTitle(table_name)[0]
+            # bring table to top by using activate
+            self.table.activate()
         except IndexError:
             raise exceptions.NoTableFound
         else:
@@ -38,9 +40,8 @@ class TableConfiguration:
         self.configuration_parser.write_table_configuration(
             table_height=self.height,
             table_width=self.width,
-            search_string=self.search_string
+            search_string=self.search_string,
         )
-
 
 
 table_configuration = TableConfiguration(ConfigurationParser)

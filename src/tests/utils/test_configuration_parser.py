@@ -42,7 +42,7 @@ def test_write_table_configuration(settings_file):
         filename=str(settings_file),
         table_height=10,
         table_width=10,
-        search_string='New String'
+        search_string="New String",
     )
 
     # Read the updated settings file

@@ -21,7 +21,6 @@ class MainWindow(QMainWindow):
             self.ui.table_setup_search.clicked.connect(
                 lambda: table_setup.search_table(self.ui)
             )
-            self.ui.table_setup_save.clicked.connect(
-                table_setup.save_settings
-            )
+            self.ui.table_setup_save.clicked.connect(table_setup.save_settings)
+
         setup_table()
