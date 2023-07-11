@@ -1,11 +1,12 @@
+from PyQt6.QtWidgets import QMessageBox
+
 from services.tables import exceptions as table_exceptions
 from services.tables.table_manager import table_configuration
 from widgets.utils.popup import PopupMessage
-from PyQt6.QtWidgets import QMessageBox
-
 
 MESSAGES = {
-    'NO_TABLE_FOUND': 'No table found, please verify if search string matches table name'
+    'NO_TABLE_FOUND': 'No table found, please verify if search string matches table name',
+    'TABLE_SETTING_SAVED': 'Successfully saved table settings'
 }
 
 
@@ -35,3 +36,12 @@ def load_settings(ui):
     ui.table_height.setText(table_height)
     ui.table_width.setText(table_width)
     ui.table_string_search.setText(table_search_string)
+
+
+def save_settings():
+    table_configuration.save_settings()
+    PopupMessage(
+        title='Table Settings Saved',
+        message=MESSAGES['TABLE_SETTING_SAVED'],
+        icon=QMessageBox.Icon.Information
+    )

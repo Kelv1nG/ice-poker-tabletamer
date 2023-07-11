@@ -6,12 +6,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 class ConfigurationParser:
     @classmethod
-    def read_table_configuration(cls):
-        with open(BASE_DIR / "settings.json") as settings:
+    def read_table_configuration(cls, *, filename='table_settings.json'):
+        with open(BASE_DIR / 'settings' / filename) as settings:
             file_contents = settings.read()
             parsed_settings = json.loads(file_contents)
-            return parsed_settings["table_configuration"]
+            return parsed_settings['table_configuration']
 
     @classmethod
-    def write_table_configuration(cls):
-        ...
+    def write_table_configuration(cls, *, filename='table_settings.json', **kwargs):
+        with open(BASE_DIR / 'settings' /  filename) as file:
+            file_contents = file.read()
+            parsed_settings = json.loads(file_contents)
+
+        parsed_settings['table_configuration'] = kwargs
+
+        with open(BASE_DIR / 'settings' / filename, "w") as file:
+            json_string = json.dumps(parsed_settings, indent=4)
+            file.write(json_string)
