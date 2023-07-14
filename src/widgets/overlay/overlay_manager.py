@@ -11,10 +11,3 @@ class OverlayManager:
     def create_overlay(self):
         overlay = Overlay()
         overlay.show()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    overlay_manager = OverlayManager()
-    overlay_manager.create_overlay()
-    app.exec()

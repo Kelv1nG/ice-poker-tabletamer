@@ -6,10 +6,10 @@ from . import exceptions
 
 
 class TableConfiguration:
-    def __init__(self, configuration_parser: ConfigurationParser):
-        self.width = 0
-        self.height = 0
-        self.search_string = ""
+    def __init__(self, configuration_parser: type[ConfigurationParser]):
+        self.width: int = 0
+        self.height: int = 0
+        self.search_string: str = ""
         self.table = None
         self.table_settings = None
         self.configuration_parser = configuration_parser

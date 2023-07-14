@@ -1,7 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow
 
-from . import table_setup
+from . import layout_setup, table_setup
 
 
 class MainWindow(QMainWindow):
@@ -23,4 +23,8 @@ class MainWindow(QMainWindow):
             )
             self.ui.table_setup_save.clicked.connect(table_setup.save_settings)
 
+        def visualize_grid():
+            self.ui.visualize_grid.clicked.connect(layout_setup.show_layout)
+
         setup_table()
+        visualize_grid()

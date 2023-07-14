@@ -25,10 +25,3 @@ class Overlay(QWidget):
 
     def mousePressEvent(self, event):
         QtWidgets.QApplication.quit()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    overlay = Overlay()
-    overlay.show()
-    app.exec()
