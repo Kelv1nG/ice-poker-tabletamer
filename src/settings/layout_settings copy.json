@@ -1,0 +1,11 @@
+{
+    "layout_configuration": {
+        "table_count": 5,
+        "table_configurations": {
+            "slot_1" : {
+                "top": null,
+                "left": null
+            }
+        }
+    }
+}
