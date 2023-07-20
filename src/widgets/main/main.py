@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
 
         # init methods
         table_setup.load_settings(self.ui)
+        layout_setup.load_settings(self.ui)
         self.connect_buttons()
         self.show()
 
@@ -26,5 +27,14 @@ class MainWindow(QMainWindow):
         def visualize_grid():
             self.ui.visualize_grid.clicked.connect(layout_setup.show_layout)
 
+        def add_reduce_tables():
+            self.ui.add_table_count.clicked.connect(
+                lambda: layout_setup.add_table_count(self.ui)
+            )
+            self.ui.reduce_table_count.clicked.connect(
+                lambda: layout_setup.reduce_table_count(self.ui)
+            )
+
         setup_table()
         visualize_grid()
+        add_reduce_tables()
