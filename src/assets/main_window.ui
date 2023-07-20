@@ -207,7 +207,7 @@ QPushButton:pressed {
           <string>Visualize Grid</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="add_table_slot_button">
+        <widget class="QPushButton" name="add_table_count">
          <property name="geometry">
           <rect>
            <x>100</x>
@@ -220,7 +220,7 @@ QPushButton:pressed {
           <string>+</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="reduce_table_slot_button">
+        <widget class="QPushButton" name="reduce_table_count">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -251,7 +251,7 @@ QPushButton:pressed {
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="total_tables_label">
+           <widget class="QLabel" name="table_count_value">
             <property name="text">
              <string>0</string>
             </property>
