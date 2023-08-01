@@ -5,5 +5,41 @@
 
 
 
-
-layout-grid
+process_tracker:
+    "table_configurations": {
+        "slot_1": {
+            "top": 121,
+            "left": 858
+        },
+        "slot_2": {
+            "top": 222,
+            "left": 2113
+        },
+        "slot_3": {
+            "top": 369,
+            "left": 145
+        },
+        "slot_4": {
+            "top": 31,
+            "left": 8
+        }
+    }
+    what happens when run?
+        - check each window periodically
+            a) if window satisfies criteria apply resizing
+                    ( what happens if no longer fits criteria ?
+                        i.e new tab then should no longer apply the resizing constraint
+                    )
+            b)
+        - attach process windowto a slot (based on position or based on time created)
+            a) if all slots are occupied ignore new window
+            b) if a slot gets empty i.e app is closed and theres an instance of an app that
+                is not yet connected to a slot attach it to the slot
+        - arranging layout
+            - on start
+                a) get center for all windows
+                b) for each slot find min distance 
+            - when moving windows:
+                a) get center coordinate of window / app
+                b) get boundaries to the table coordinates
+                    - given top and left get boundaries by adding table width and length
