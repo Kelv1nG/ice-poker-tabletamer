@@ -15,10 +15,9 @@ class TableLayOutManager(Generic[T]):
         return cls._shared_instance
 
     def __init__(self, configuration_parser: type[ConfigurationParser]):
-        if not hasattr(self, "initialized"):
-            self.table_templates: list[T] = []
-            self.configuration_parser = configuration_parser
-            self.initialized = True
+        self.table_templates: list[T] = []
+        self.configuration_parser = configuration_parser
+        self.initialized = True
 
     @classmethod
     def get_instance(cls, configuration_parser: type[ConfigurationParser]):
@@ -71,10 +70,10 @@ class TableLayOutManager(Generic[T]):
         )
         self.table_templates.append(main_table_template)
         for number_label in range(2, self.layout_settings.get("table_count", 1) + 1):
-            left = self.table_configurations.get("slot_" + str(number_label)).get(
+            left = self.table_configurations.get("slot_" + str(number_label), {}).get(
                 "left", 0
             )
-            top = self.table_configurations.get("slot_" + str(number_label)).get(
+            top = self.table_configurations.get("slot_" + str(number_label), {}).get(
                 "top", 0
             )
             table_template = cls_table_template(
