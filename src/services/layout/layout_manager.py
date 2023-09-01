@@ -1,6 +1,6 @@
 from typing import Any, Generic, TypeVar
 
-from utils.configuration_parser import ConfigurationParser
+from utils.configuration_parser import ConfigurationParser, IConfigurationParser
 from widgets.table_layout.table_template import TableTemplate
 
 T = TypeVar("T", bound=TableTemplate)
@@ -14,13 +14,13 @@ class TableLayOutManager(Generic[T]):
             cls._shared_instance = super(TableLayOutManager, cls).__new__(cls)
         return cls._shared_instance
 
-    def __init__(self, configuration_parser: type[ConfigurationParser]):
+    def __init__(self, configuration_parser: type[IConfigurationParser]):
         self.table_templates: list[T] = []
         self.configuration_parser = configuration_parser
         self.initialized = True
 
     @classmethod
-    def get_instance(cls, configuration_parser: type[ConfigurationParser]):
+    def get_instance(cls, configuration_parser: type[IConfigurationParser]):
         if not cls._shared_instance:
             cls._shared_instance = TableLayOutManager(configuration_parser)
         return cls._shared_instance
