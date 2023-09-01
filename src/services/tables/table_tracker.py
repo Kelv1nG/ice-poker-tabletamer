@@ -1,33 +1,21 @@
-
 import math
-
-from utilities import AppName, WindowsSelector
-from services.layout.layout_manager import TableLayOutManager
-from services.tables.table_manager import TableConfiguration
-from . import exceptions
 from dataclasses import dataclass
+
 import pygetwindow as gw
 
+from services.layout.layout_manager import TableLayOutManager
 
-@dataclass
-class Slot:
-    """
-    Represents a slot with its properties
-
-    Attributes:
-        top (int): Vertical position of the slot's top edge (in pixels).
-        left (int): Horizontal position of the slot's left edge (in pixels).
-        window (Optional[gw.Window]): Associated window object (if allocated).
-    """
-    top: int
-    left: int
-    window: gw.Window | None
+from . import exceptions
+from .entities import Slot
+from .table_manager import TableConfiguration
+from .utilities import AppName, WindowsSelector
 
 
 class SlotManager:
     """
     A class to manage slots and window allocation.
     """
+
     def __init__(self):
         """
         Initialize the SlotManager class to manage window slots and allocation.
@@ -94,6 +82,7 @@ class SlotManager:
     def slots(self, table_configurations: dict[str, Slot]) -> None:
         self._slots = table_configurations
 
+
 class ProcessTracker:
     def __init__(
         self,
@@ -120,11 +109,19 @@ class ProcessTracker:
     def table_search_string(self):
         return self.table_configuration.search_string
 
-    def intialize_slots(self):
-        self.slot_manager.slots = self.table_layout
+    def initialize_slots(self):
+        """
+        load the json data from configuration into slot objects
+        """
+        slot_dict = {}
+        for key, value in self.table_layout.items():
+            slot_dict[key] = Slot(top=value['top'], left=value['left'])
+        self.slot_manager.slots = slot_dict
 
     def arrange_layout_on_start(self, windows: list[gw.Window]):
-        def calculate_distance(win_coord: tuple[int, int], slot_coord: tuple[int, int]) -> int:
+        def calculate_distance(
+            win_coord: tuple[int, int], slot_coord: tuple[int, int]
+        ) -> int:
             """
             Calculate the distance between two points in a two-dimensional space.
 
@@ -135,32 +132,59 @@ class ProcessTracker:
             Returns:
                 int: The distance between the center of the window and the center of the slot coordinates.
             """
-            return math.sqrt((win_coord[0] - slot_coord[0])^2 + (win_coord[1] - slot_coord[1])^2)
+            return math.sqrt(
+                (win_coord[0] - slot_coord[0])**2 + (win_coord[1] - slot_coord[1])**2
+            )
 
-        def assign_windows_to_slots():
+        def assign_windows_to_slots() -> dict[str, Slot]:
+            """
+            Calculates all distances of slots to windows, assigns min distance of a window to a slot until
+            all slots are taken or all windows are assigned
+            """
             slot_center_coordinates = self.slot_manager.get_center_for_each_slot()
             windows_center_coordinates = WindowsSelector.get_center_for_windows(windows)
 
-            for windows_coord in windows_center_coordinates:
-                min_distance = 0
+            # list of assigned windows to keep track of
+            assigned_windows = []
+            assigned_slots = []
 
-                for slot_coord in slot_center_coordinates:
-                    distance = calculate_distance((windows_coord[0], windows_coord[1]), (slot_coord[0], slot_coord[1]))
+            # calculate all distances for each target window and slot
+            slot_distances_pair = {}
+            for slot_num, slot_coord in slot_center_coordinates.items():
+                distances = {}
+                for win_coord_y, win_coord_x, target_window in windows_center_coordinates:
+                    distance = calculate_distance(win_coord=(win_coord_y, win_coord_x), slot_coord=slot_coord)
+                    distances[distance] = target_window
+                slot_distances_pair[slot_num] = distances
 
+            # sort distances for each slot in ascending order
+            for slot_num, distances in slot_distances_pair.items():
+                sorted_distances = sorted(distances.items(), key=lambda x: x[0])
 
-
+                # assign to the closest available slot
+                for distance, target_window in sorted_distances:
+                    if target_window not in assigned_windows and slot_num not in assigned_slots:
+                        self.slot_manager.allocate_window_to_slot(slot_num, target_window)
+                        assigned_windows.append(target_window)
+                        assigned_slots.append(slot_num)
+            return self.slot_manager.slots
 
         self.initialize_slots()
-
-
-
-
+        assign_windows_to_slots()
 
     def track_process(self, app_name: str):
         table_configurations = self.table_layout_manager.table_configurations
-        print(table_configurations)
         # loop through each google chrome instance find closest match to configuration
 
+
+if __name__ == "__main__":
+    from services.layout.layout_manager import table_layout_manager
+    from services.tables.table_manager import table_configuration
+
+    process_tracker = ProcessTracker(
+        table_configuration=table_configuration,
+        table_layout_manager=table_layout_manager,
+    )
 
 # def track_processes(app_name: str, table_positions: dict, table_layout: dict):
 #     original_positions = {}  # Dictionary to store the original positions of windows
