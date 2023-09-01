@@ -1,7 +1,6 @@
 import pyautogui
 
-from utils.configuration_parser import (ConfigurationParser,
-                                        IConfigurationParser)
+from utils.configuration_parser import ConfigurationParser, IConfigurationParser
 
 from . import exceptions
 
@@ -51,7 +50,7 @@ class TableConfiguration:
         return self._height
 
     @search_string.setter
-    def search_string(self, search_string: str):
+    def set_search_string(self, search_string: str):
         self._search_string = search_string
 
     def configure_single_table(self, table_name: str):
