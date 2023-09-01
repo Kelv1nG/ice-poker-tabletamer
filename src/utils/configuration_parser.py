@@ -1,19 +1,38 @@
 import json
+from abc import ABC, abstractmethod
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-class ConfigurationParser:
-    @classmethod
-    def read_table_configuration(cls, *, filename="table_settings.json"):
+class IConfigurationParser(ABC):
+    @abstractmethod
+    def read_table_configuration(self, *, filename="table_settings.json"):
+        pass
+
+    @abstractmethod
+    def write_table_configuration(self, *, filename="table_settings.json", **kwargs):
+        pass
+
+    @abstractmethod
+    def read_layout_configuration(self, *, filename="layout_settings.json"):
+        pass
+
+    @abstractmethod
+    def write_layout_configuration(self, *, filename="layout_settings.json", **kwargs):
+        pass
+
+
+class ConfigurationParser(IConfigurationParser):
+    @staticmethod
+    def read_table_configuration(*, filename="table_settings.json"):
         with open(BASE_DIR / "settings" / filename) as settings:
             file_contents = settings.read()
             parsed_settings = json.loads(file_contents)
             return parsed_settings["table_configuration"]
 
-    @classmethod
-    def write_table_configuration(cls, *, filename="table_settings.json", **kwargs):
+    @staticmethod
+    def write_table_configuration(*, filename="table_settings.json", **kwargs):
         with open(BASE_DIR / "settings" / filename) as file:
             file_contents = file.read()
             parsed_settings = json.loads(file_contents)
@@ -24,15 +43,15 @@ class ConfigurationParser:
             json_string = json.dumps(parsed_settings, indent=4)
             file.write(json_string)
 
-    @classmethod
-    def read_layout_configuration(cls, *, filename="layout_settings.json"):
+    @staticmethod
+    def read_layout_configuration(*, filename="layout_settings.json"):
         with open(BASE_DIR / "settings" / filename) as settings_file:
             file_contents = settings_file.read()
             parsed_settings = json.loads(file_contents)
             return parsed_settings.get("layout_configuration", {})
 
-    @classmethod
-    def write_layout_configuration(cls, *, filename="layout_settings.json", **kwargs):
+    @staticmethod
+    def write_layout_configuration(*, filename="layout_settings.json", **kwargs):
         with open(BASE_DIR / "settings" / filename) as file:
             file_contents = file.read()
             parsed_settings = json.loads(file_contents)
