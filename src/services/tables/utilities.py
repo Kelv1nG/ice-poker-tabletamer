@@ -1,31 +1,19 @@
-
 import pygetwindow as gw
-import enum
-
-
-class AppName(enum.Enum):
-    FIREFOX = "Mozilla Firefox"
-    CHROME = "Google Chrome"
+from services.tables.entities import AppName
 
 
 class WindowsSelector:
     @staticmethod
-    def get_windows_by_title(title: str) -> list[gw.Window] | None:
-        return gw.getWindowsWithTitle(title)
+    def get_windows_by_app_name(app_name: AppName) -> list[gw.Window] | None:
+        return gw.getWindowsWithTitle(app_name.value)
 
     @staticmethod
-    def get_active_tab_title(app_name: str, process_window: gw.Window) -> str | None:
-        def get_tab_title(process_window: gw.Window, app_name: str):
-            match app_name:
-                case AppName.CHROME.value:
-                    return process_window.title.split(" - Google Chrome")[0]
-                case AppName.FIREFOX.value:
-                    return process_window.title
-
-        if process_window:
-            active_tab_title = get_tab_title(process_window, app_name)
-            return active_tab_title
-        return None
+    def get_active_tab_title(app_name: AppName, process_window: gw.Window) -> str:
+        match app_name.value:
+            case AppName.CHROME.value:
+                return process_window.title.split(" - Google Chrome")[0]
+            case AppName.FIREFOX.value:
+                return process_window.title
 
     @staticmethod
     def get_center_for_windows(
