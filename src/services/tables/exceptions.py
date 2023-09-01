@@ -12,4 +12,3 @@ class SlotAlreadyOccupied(Exception):
 
 class EmptySlot(Exception):
     ...
-
