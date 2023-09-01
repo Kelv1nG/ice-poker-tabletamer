@@ -22,6 +22,7 @@ process_tracker:
         "slot_4": {
             "top": 31,
             "left": 8
+            "window": gw.window
         }
     }
     what happens when run?
@@ -38,7 +39,7 @@ process_tracker:
         - arranging layout
             - on start
                 a) get center for all windows
-                b) for each slot find min distance 
+                b) for each slot find min distance
             - when moving windows:
                 a) get center coordinate of window / app
                 b) get boundaries to the table coordinates

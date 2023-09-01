@@ -1,18 +1,22 @@
 {
     "layout_configuration": {
-        "table_count": 3,
+        "table_count": 4,
         "table_configurations": {
             "slot_1": {
-                "top": 107,
-                "left": 1180
+                "top": 39,
+                "left": -1860
             },
             "slot_2": {
-                "top": 92,
-                "left": 418
+                "top": 39,
+                "left": -1237
             },
             "slot_3": {
-                "top": 31,
-                "left": 8
+                "top": 37,
+                "left": -697
+            },
+            "slot_4": {
+                "top": 32,
+                "left": 62
             }
         }
     }
