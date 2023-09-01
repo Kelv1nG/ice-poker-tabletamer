@@ -1,9 +1,17 @@
 from PyQt6 import QtCore
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-                             QSpacerItem, QVBoxLayout)
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+)
 
 from services.layout.layout_manager import table_layout_manager
+from widgets.utils.popup import PopupMessage
 
 from .table_template import TableTemplate
 
@@ -68,3 +76,8 @@ class MainTableTemplate(TableTemplate):
 
     def save(self):
         table_layout_manager.save_table_configuration()
+        PopupMessage(
+            title="Layout Saved",
+            message="Successfully Saved TableLayouts",
+            icon=QMessageBox.Icon.Information,
+        )
