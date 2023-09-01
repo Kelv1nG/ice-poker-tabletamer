@@ -6,7 +6,7 @@ from widgets.utils.popup import PopupMessage
 
 MESSAGES = {
     "NO_TABLE_FOUND": "No table found, please verify if search string matches table name",
-    "TABLE_DETECTED": "Table Detected, Please resize to desired table width, height before saving",
+    "TABLE_DETECTED": "Table Detected, Current height: {table_height}, width: {table_width}",
     "TABLE_SETTING_SAVED": "Successfully saved table settings",
 }
 
@@ -22,11 +22,14 @@ def search_table(ui):
             icon=QMessageBox.Icon.Warning,
         )
     else:
-        table_height = str(table_configuration.height)
-        table_width = str(table_configuration.width)
-        ui.table_height.setText(table_height)
-        ui.table_width.setText(table_width)
-        PopupMessage(title="Table Detected", message=MESSAGES["TABLE_DETECTED"])
+        table_height = str(table_configuration.current_height)
+        table_width = str(table_configuration.current_width)
+        PopupMessage(
+            title="Table Detected",
+            message=MESSAGES["TABLE_DETECTED"].format(
+                table_height=table_height, table_width=table_width
+            ),
+        )
 
 
 def load_settings(ui):
@@ -40,8 +43,12 @@ def load_settings(ui):
     ui.table_string_search.setText(table_search_string)
 
 
-def save_settings():
+def save_settings(ui):
     table_configuration.save_settings()
+    table_height = str(table_configuration.height)
+    table_width = str(table_configuration.width)
+    ui.table_height.setText(table_height)
+    ui.table_width.setText(table_width)
     PopupMessage(
         title="Table Settings Saved",
         message=MESSAGES["TABLE_SETTING_SAVED"],
