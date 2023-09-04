@@ -22,4 +22,15 @@ class Slot:
 
     top: int
     left: int
+    height: int
+    width: int
     window: gw.Window | None = None
+
+    def move_to_assigned_slot(self):
+        if self.window:
+            self.window.moveTo(self.left, self.top)
+
+    def resize_window(self):
+        if self.window:
+            self.window.width = self.width
+            self.window.height = self.height
