@@ -1,0 +1,75 @@
+1. table configuration - OK
+   - detect a target window
+   - define search string
+   - save / load height width and search string
+
+2. layout configurations - OK
+   - layout of tables which includes defining its coordinates x and y
+   - visual representation of layout
+   - save / load layout
+
+3. arrange windows on start ( this includes resizing and assigning it to the initial slots ) - OK
+4. table / process tracking
+    threads:
+        - thread for checking of new spawned / changed(tab title) / deleted processes fitting the target app i.e chrome
+            - new_process_event, changed_process_event, deleted_event
+
+    event handler:
+        new process event:
+            - if all slots are taken do nothing
+            - if a slot or multiple slots are empty assign target window to nearest slot
+        changed event:
+            - remove from slot if it no longer fits the criteria
+            - check if there is an available slot and assign it to the nearest slot
+        deleted event
+            - remove from slot
+
+
+
+
+
+
+
+layout_configuration:
+    "table_configurations": {
+        "slot_1": {
+            "top": 121,
+            "left": 858
+        },
+        "slot_2": {
+            "top": 222,
+            "left": 2113
+        },
+        "slot_3": {
+            "top": 369,
+            "left": 145
+        },
+        "slot_4": {
+            "top": 31,
+            "left": 8
+            "window": gw.window
+        }
+    }
+    what happens when run?
+        - check each window periodically
+            a) if window satisfies criteria apply resizing
+                    ( what happens if no longer fits criteria ?
+                        i.e new tab then should no longer apply the resizing constraint
+                    )
+            b) this means if window doesnt fit criteria (i.e table name ) then it should be removed from the slot
+        - attach process windowto a slot (based on position or based on time created)
+            a) if all slots are occupied ignore new window
+            b) if a slot gets empty i.e app is closed and theres an instance of an app that
+                is not yet connected to a slot attach it to the slot
+        - arranging layout
+            - on start
+                a) get center for all windows
+                b) for each slot find min distance
+            - when moving windows:
+                a) get center coordinate of window / app
+                b) get boundaries to the table coordinates
+                    - given top and left get boundaries by adding table width and length
+
+        - create a separate thread for checking new spawned processes fitting the criteria of the target window
+            - create a worker for this such that the separate thread will just send notifications to an event handler
+            - create the event handler
