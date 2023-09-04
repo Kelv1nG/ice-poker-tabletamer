@@ -1,4 +1,5 @@
 import pygetwindow as gw
+
 from services.tables.entities import AppName
 
 
@@ -14,6 +15,19 @@ class WindowsSelector:
                 return process_window.title.split(" - Google Chrome")[0]
             case AppName.FIREFOX.value:
                 return process_window.title
+
+    @staticmethod
+    def filter_windows_by_tab_title(
+        tab_title: str, process_windows: list[gw.Window]
+    ) -> list[gw.Window]:
+        return [
+            window
+            for window in process_windows
+            if WindowsSelector.get_active_tab_title(
+                app_name=AppName.CHROME, process_window=window
+            )
+            == tab_title
+        ]
 
     @staticmethod
     def get_center_for_windows(
