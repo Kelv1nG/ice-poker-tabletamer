@@ -24,7 +24,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="main">
        <attribute name="title">
@@ -161,7 +161,7 @@ QPushButton:pressed {
           <property name="frameShadow">
            <enum>QFrame::Sunken</enum>
           </property>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="start_button">
            <property name="geometry">
             <rect>
              <x>190</x>
@@ -172,6 +172,45 @@ QPushButton:pressed {
            </property>
            <property name="text">
             <string>Start!</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="running_label">
+           <property name="geometry">
+            <rect>
+             <x>40</x>
+             <y>20</y>
+             <width>81</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Running...</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="table_count_label">
+           <property name="geometry">
+            <rect>
+             <x>40</x>
+             <y>40</y>
+             <width>101</width>
+             <height>61</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>tables: </string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="table_count_display">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>50</y>
+             <width>31</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0</string>
            </property>
           </widget>
          </widget>
