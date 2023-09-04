@@ -17,9 +17,6 @@ class SlotManager:
     """
 
     def __init__(self):
-        """
-        Initialize the SlotManager class to manage window slots and allocation.
-        """
         self._slots: dict[str, Slot] = {}
 
     def allocate_window_to_slot(self, slot_num: str, process_window: gw.Window) -> None:
@@ -115,10 +112,19 @@ class ProcessTracker:
         """
         slot_dict = {}
         for key, value in self.table_layout.items():
-            slot_dict[key] = Slot(top=value['top'], left=value['left'])
+            slot_dict[key] = Slot(
+                top=value["top"],
+                left=value["left"],
+                height=self.table_configuration.height,
+                width=self.table_configuration.width,
+            )
         self.slot_manager.slots = slot_dict
 
-    def arrange_layout_on_start(self, windows: list[gw.Window]):
+    def get_target_windows(self) -> list[gw.Window]:
+        windows = WindowsSelector.get_windows_by_app_name(AppName.CHROME)
+        return WindowsSelector.filter_windows_by_tab_title(tab_title=self.table_configuration.search_string, process_windows=windows)
+
+    def arrange_layout_on_start(self):
         def calculate_distance(
             win_coord: tuple[int, int], slot_coord: tuple[int, int]
         ) -> int:
@@ -133,7 +139,8 @@ class ProcessTracker:
                 int: The distance between the center of the window and the center of the slot coordinates.
             """
             return math.sqrt(
-                (win_coord[0] - slot_coord[0])**2 + (win_coord[1] - slot_coord[1])**2
+                (win_coord[0] - slot_coord[0]) ** 2
+                + (win_coord[1] - slot_coord[1]) ** 2
             )
 
         def assign_windows_to_slots() -> dict[str, Slot]:
@@ -141,6 +148,8 @@ class ProcessTracker:
             Calculates all distances of slots to windows, assigns min distance of a window to a slot until
             all slots are taken or all windows are assigned
             """
+            windows = self.get_target_windows()
+
             slot_center_coordinates = self.slot_manager.get_center_for_each_slot()
             windows_center_coordinates = WindowsSelector.get_center_for_windows(windows)
 
@@ -152,8 +161,14 @@ class ProcessTracker:
             slot_distances_pair = {}
             for slot_num, slot_coord in slot_center_coordinates.items():
                 distances = {}
-                for win_coord_y, win_coord_x, target_window in windows_center_coordinates:
-                    distance = calculate_distance(win_coord=(win_coord_y, win_coord_x), slot_coord=slot_coord)
+                for (
+                    win_coord_y,
+                    win_coord_x,
+                    target_window,
+                ) in windows_center_coordinates:
+                    distance = calculate_distance(
+                        win_coord=(win_coord_y, win_coord_x), slot_coord=slot_coord
+                    )
                     distances[distance] = target_window
                 slot_distances_pair[slot_num] = distances
 
@@ -163,14 +178,29 @@ class ProcessTracker:
 
                 # assign to the closest available slot
                 for distance, target_window in sorted_distances:
-                    if target_window not in assigned_windows and slot_num not in assigned_slots:
-                        self.slot_manager.allocate_window_to_slot(slot_num, target_window)
+                    if (
+                        target_window not in assigned_windows
+                        and slot_num not in assigned_slots
+                    ):
+                        self.slot_manager.allocate_window_to_slot(
+                            slot_num, target_window
+                        )
                         assigned_windows.append(target_window)
                         assigned_slots.append(slot_num)
             return self.slot_manager.slots
 
+        def move_windows_to_slots():
+            for slot in self.slot_manager.slots.values():
+                slot.move_to_assigned_slot()
+
+        def resize_windows():
+            for slot in self.slot_manager.slots.values():
+                slot.resize_window()
+
         self.initialize_slots()
         assign_windows_to_slots()
+        move_windows_to_slots()
+        resize_windows()
 
     def track_process(self, app_name: str):
         table_configurations = self.table_layout_manager.table_configurations
