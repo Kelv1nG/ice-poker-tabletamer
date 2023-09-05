@@ -1,12 +1,19 @@
 from services.layout.layout_manager import table_layout_manager
 from services.tables.entities import AppName
 from services.tables.table_config import table_configuration
-from services.tables.table_manager import ProcessManager
+from services.tables.table_manager import TableManager
 from services.tables.utilities import WindowsSelector
+from services.tables.events import EventType
+import pygetwindow as gw
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
 import time
+
+table_manager = TableManager(
+            table_layout_manager=table_layout_manager,
+            table_configuration=table_configuration,
+        )
 
 
 class Task(QObject):
@@ -29,22 +36,19 @@ class Task(QObject):
 
 
 class TrackProcess(Task):
+    event_signal = pyqtSignal(EventType, gw.Window)
+
     def __init__(self):
         super().__init__()
-        self.process_tracker = ProcessManager(
-            table_layout_manager=table_layout_manager,
-            table_configuration=table_configuration,
-        )
+        self.event_signal.connect(self.handle_event)
 
     def run(self):
-        self.process_tracker.arrange_layout_on_start()
-        t1 = time.time()
-        i =0
+        table_manager.initialize_tracked_windows()
+        table_manager.arrange_layout_on_start()
         while not self.is_stopped:
-            new = self.process_tracker.get_target_windows()
-            print(new)
-            i += 1
-            if i == 1000:
-                break
-        t2 = time.time()
-        print(t2-t1)
+            has_new_window, new_window = table_manager.is_new_window_detected()
+            if has_new_window:
+                self.event_signal.emit(EventType.NEW_WINDOW, new_window)
+
+    def handle_event(self, event_type: EventType, window: gw.Window):
+        table_manager.handle_event(event_type=event_type, window=window)
