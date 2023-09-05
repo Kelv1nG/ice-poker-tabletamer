@@ -2,7 +2,7 @@ from time import sleep
 
 from widgets.main.main_thread import run_task
 from widgets.workers.worker import Worker
-from widgets.workers.worker_functions import ProcessWorker
+from widgets.workers.task import TrackProcess
 
 START = "Start!"
 STOP = "Stop"
@@ -24,7 +24,7 @@ def on_start(self, ui):
     text = ui.start_button.text()
     if text == START:
         show_labels_on_start(ui)
-        run_task(self, Worker(worker_function=ProcessWorker()))
+        run_task(self, Worker(task=TrackProcess()))
 
         ui.start_button.setText(STOP)
     elif text == STOP:

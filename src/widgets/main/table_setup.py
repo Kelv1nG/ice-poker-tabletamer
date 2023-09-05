@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QMessageBox
 
 from services.tables import exceptions as table_exceptions
-from services.tables.table_manager import table_configuration
+from services.tables.table_config import table_configuration
 from widgets.utils.popup import PopupMessage
 
 MESSAGES = {
