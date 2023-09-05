@@ -9,11 +9,11 @@ from . import exceptions
 from .entities import Slot
 from .table_config import TableConfiguration
 from .utilities import AppName, WindowsSelector
-
+from .events import EventType
 
 class SlotManager:
     """
-    A class to manage slots and window allocation.
+    class to manage slots and window allocation.
     """
 
     def __init__(self):
@@ -21,11 +21,11 @@ class SlotManager:
 
     def allocate_window_to_slot(self, slot_num: str, process_window: gw.Window) -> None:
         """
-        Allocate a window to a specified slot.
+        allocate a window to a specified slot.
 
         Args:
-            slot_num (str): Slot number to allocate the window to.
-            process_window (gw.Window): The window to be allocated.
+            slot_num (str): slot number to allocate the window to.
+            process_window (gw.Window): window to be allocated.
 
         Raises:
             exceptions.SlotAlreadyOccupied: If the slot is already occupied by a window.
@@ -34,6 +34,8 @@ class SlotManager:
         if slot_num in self._slots:
             if self._slots[slot_num].window is None:
                 self._slots[slot_num].window = process_window
+                self._slots[slot_num].resize_window()
+                self._slots[slot_num].move_to_assigned_slot()
             else:
                 raise exceptions.SlotAlreadyOccupied(slot_num)
         else:
@@ -41,12 +43,12 @@ class SlotManager:
 
     def deallocate_slot(self, slot_num: str) -> None:
         """
-        Deallocate a window from a specified slot.
+        deallocate a window from a specified slot.
 
-        Args:
+        args:
             slot_num (str): Slot number to deallocate the window from.
 
-        Raises:
+        raises:
             exceptions.EmptySlot: If the slot is already empty (no window allocated).
             exceptions.InvalidSlotNum: If the provided slot number is invalid.
         """
@@ -61,9 +63,9 @@ class SlotManager:
 
     def get_center_for_each_slot(self) -> dict[str, tuple[int, int]]:
         """
-        Calculate the center coordinates for each slot.
+        calculate the center coordinates for each slot.
 
-        Returns:
+        returns:
             dict: A dictionary mapping each slot number to its center coordinates.
         """
         center_coordinates = {}
@@ -80,7 +82,10 @@ class SlotManager:
         self._slots = table_configurations
 
 
-class ProcessManager:
+class TableManager:
+    """
+    class for handling events and processes
+    """
     def __init__(
         self,
         table_layout_manager: TableLayOutManager,
@@ -89,6 +94,8 @@ class ProcessManager:
         self.table_layout_manager = table_layout_manager
         self.table_configuration = table_configuration
         self.slot_manager = SlotManager()
+
+        self.tracked_windows: list[gw.Window] | list[None] = []
 
     @property
     def table_layout(self):
@@ -120,29 +127,66 @@ class ProcessManager:
             )
         self.slot_manager.slots = slot_dict
 
+    def initialize_tracked_windows(self):
+        self.tracked_windows = self.get_target_windows()
+
+    def handle_event(self, event_type: EventType, window: gw.Window):
+        match event_type:
+            case EventType.NEW_WINDOW:
+                self.handle_new_window_event(window)
+            case EventType.ACTIVE_TAB_CHANGED:
+                self.handle_active_tab_changed_event(window)
+            case EventType.WINDOW_DELETED:
+                self.handle_window_deleted_event(window)
+
+    def handle_new_window_event(self, window: gw.Window):
+        empty_slots = {key: value for key, value in self.slot_manager.slots.items() if value.window is None}
+        if len(empty_slots) > 0:
+            # assign to first empty slot in order
+            slot_num = next(iter(empty_slots.keys()))
+            self.slot_manager.allocate_window_to_slot(slot_num=slot_num, process_window=window)
+
+    def handle_active_tab_changed_event(self, window: gw.Window):
+        pass
+
+    def handle_window_deleted_event(self, window: gw.Window):
+        pass
+
     def get_target_windows(self) -> list[gw.Window]:
         windows = WindowsSelector.get_windows_by_app_name(AppName.CHROME)
         return WindowsSelector.filter_windows_by_tab_title(tab_title=self.table_configuration.search_string, process_windows=windows)
 
+    def is_new_window_detected(self) -> tuple[bool, gw.Window | None]:
+        new_windows = [window for window in self.get_target_windows() if window not in self.tracked_windows]
+
+        if len(new_windows) > 1:  # Program assumed to detect only 1 window at a time per cycle
+            raise exceptions.MultipleWindowsDetected
+
+        if new_windows:
+            new_window = new_windows[0]
+            self.tracked_windows.append(new_window)
+
+        return bool(new_windows), new_windows[0] if new_windows else (False, None)
+
+    def calculate_distance(
+        self, win_coord: tuple[int, int], slot_coord: tuple[int, int]
+    ) -> int:
+        """
+        calculate the distance between two points in a two-dimensional space (aka desktop coords lol).
+
+        Args:
+            win_coord (tuple[int, int]): Center coordinates of the window as (center_y, center_x).
+            slot_coord (tuple[int, int]): Center coordinates of the slot as (center_y, center_x).
+
+        Returns:
+            int: The distance between the center of the window and the center of the slot coordinates.
+        """
+        return math.sqrt(
+            (win_coord[0] - slot_coord[0]) ** 2
+            + (win_coord[1] - slot_coord[1]) ** 2
+        )
+
     def arrange_layout_on_start(self):
-        def calculate_distance(
-            win_coord: tuple[int, int], slot_coord: tuple[int, int]
-        ) -> int:
-            """
-            Calculate the distance between two points in a two-dimensional space.
-
-            Args:
-                win_coord (tuple[int, int]): Center coordinates of the window as (center_y, center_x).
-                slot_coord (tuple[int, int]): Center coordinates of the slot as (center_y, center_x).
-
-            Returns:
-                int: The distance between the center of the window and the center of the slot coordinates.
-            """
-            return math.sqrt(
-                (win_coord[0] - slot_coord[0]) ** 2
-                + (win_coord[1] - slot_coord[1]) ** 2
-            )
-
         def assign_windows_to_slots() -> dict[str, Slot]:
             """
             Calculates all distances of slots to windows, assigns min distance of a window to a slot until
@@ -166,7 +210,7 @@ class ProcessManager:
                     win_coord_x,
                     target_window,
                 ) in windows_center_coordinates:
-                    distance = calculate_distance(
+                    distance = self.calculate_distance(
                         win_coord=(win_coord_y, win_coord_x), slot_coord=slot_coord
                     )
                     distances[distance] = target_window
@@ -189,19 +233,8 @@ class ProcessManager:
                         assigned_slots.append(slot_num)
             return self.slot_manager.slots
 
-        def move_windows_to_slots():
-            for slot in self.slot_manager.slots.values():
-                slot.move_to_assigned_slot()
-
-        def resize_windows():
-            for slot in self.slot_manager.slots.values():
-                slot.resize_window()
-
         self.initialize_slots()
         assign_windows_to_slots()
-        move_windows_to_slots()
-        resize_windows()
-
 
 # def track_processes(app_name: str, table_positions: dict, table_layout: dict):
 #     original_positions = {}  # Dictionary to store the original positions of windows
