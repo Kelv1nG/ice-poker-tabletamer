@@ -53,9 +53,9 @@ class SlotManager:
             exceptions.InvalidSlotNum: If the provided slot number is invalid.
         """
         if slot_num in self._slots:
-            slot_info = self._slots[slot_num]
-            if slot_info.window:
-                slot_info.window = None
+            slot = self._slots[slot_num]
+            if slot.window:
+                slot.window = None
             else:
                 raise exceptions.EmptySlot(slot_num)
         else:
@@ -72,6 +72,10 @@ class SlotManager:
         for slot_num, value in self._slots.items():
             center_coordinates[slot_num] = (value.top / 2, value.left / 2)
         return center_coordinates
+
+    @property
+    def allocated_windows(self) -> list[gw.Window]:
+        return [slot.window for slot in self._slots.values() if slot.window is not None]
 
     @property
     def slots(self) -> dict[str, Slot]:
@@ -130,33 +134,28 @@ class TableManager:
     def initialize_tracked_windows(self):
         self.tracked_windows = self.get_target_windows()
 
-    def handle_event(self, event_type: EventType, window: gw.Window):
-        match event_type:
-            case EventType.NEW_WINDOW:
-                self.handle_new_window_event(window)
-            case EventType.ACTIVE_TAB_CHANGED:
-                self.handle_active_tab_changed_event(window)
-            case EventType.WINDOW_DELETED:
-                self.handle_window_deleted_event(window)
-
-    def handle_new_window_event(self, window: gw.Window):
-        empty_slots = {key: value for key, value in self.slot_manager.slots.items() if value.window is None}
-        if len(empty_slots) > 0:
-            # assign to first empty slot in order
-            slot_num = next(iter(empty_slots.keys()))
-            self.slot_manager.allocate_window_to_slot(slot_num=slot_num, process_window=window)
-
-    def handle_active_tab_changed_event(self, window: gw.Window):
-        pass
-
-    def handle_window_deleted_event(self, window: gw.Window):
-        pass
-
     def get_target_windows(self) -> list[gw.Window]:
         windows = WindowsSelector.get_windows_by_app_name(AppName.CHROME)
         return WindowsSelector.filter_windows_by_tab_title(tab_title=self.table_configuration.search_string, process_windows=windows)
 
+    def get_unallocated_window(self) -> gw.Window | None:
+        for window in self.tracked_windows:
+            if window not in self.slot_manager.allocated_windows:
+                return window
+        return None
+
     def is_new_window_detected(self) -> tuple[bool, gw.Window | None]:
+        """
+        checks if a new window that satisfies the specified conditions is detected.
+
+        function updates the list of tracked windows.
+
+        Returns:
+            A tuple containing two elements:
+            1. A boolean value indicating whether a new window satisfying the conditions is detected.
+            2. If a new window is detected, it returns the detected window;
+            otherwise, it returns None to indicate no new window detected.
+        """
         new_windows = [window for window in self.get_target_windows() if window not in self.tracked_windows]
 
         if len(new_windows) > 1:  # Program assumed to detect only 1 window at a time per cycle
@@ -167,6 +166,30 @@ class TableManager:
             self.tracked_windows.append(new_window)
 
         return bool(new_windows), new_windows[0] if new_windows else (False, None)
+
+    def is_window_terminated(self) -> tuple[bool, gw.Window | None]:
+        """
+        checks if a tracked window is no longer satisfied based on certain conditions.
+        This includes checking if the window is terminated or if its tab title has changed.
+
+        function updates the list of tracked windows
+
+        Returns:
+            A tuple containing two elements:
+            1. A boolean value indicating whether a tracked window is terminated or no longer satisfied.
+            2. If a window is terminated or no longer satisfied, it returns the terminated window;
+            otherwise, it returns None to indicate no terminated window.
+        """
+        deleted_windows = [window for window in self.tracked_windows if window not in self.get_target_windows()]
+
+        if len(deleted_windows) > 1:
+            raise exceptions.MultipleWindowsDetected
+
+        if deleted_windows:
+            deleted_window = deleted_windows[0]
+            self.tracked_windows.remove(deleted_window)
+
+        return bool(deleted_windows), deleted_windows[0] if deleted_windows else (False, None)
 
     def calculate_distance(
         self, win_coord: tuple[int, int], slot_coord: tuple[int, int]
@@ -235,6 +258,46 @@ class TableManager:
 
         self.initialize_slots()
         assign_windows_to_slots()
+
+    def add_window_to_slot(self, window: gw.Window):
+        """
+        add window to list of tracked windows and assign window to an empty slot
+        """
+        empty_slots = {key: value for key, value in self.slot_manager.slots.items() if value.window is None}
+        if len(empty_slots) > 0:
+            # assign to first empty slot in order
+            slot_num = next(iter(empty_slots.keys()))
+            self.slot_manager.allocate_window_to_slot(slot_num=slot_num, process_window=window)
+
+    def handle_event(self, event_type: EventType, window: gw.Window):
+            match event_type:
+                case EventType.NEW_WINDOW:
+                    self.handle_new_window_event(window)
+                case EventType.ACTIVE_TAB_CHANGED:
+                    self.handle_active_tab_changed_event(window)
+                case EventType.WINDOW_DELETED:
+                    self.handle_window_terminated_event(window)
+
+    def handle_new_window_event(self, window: gw.Window):
+        self.add_window_to_slot(window=window)
+
+    def handle_active_tab_changed_event(self, window: gw.Window):
+        pass
+
+    def handle_window_terminated_event(self, window: gw.Window):
+        """
+        removes it from the tracked windows list and
+        deallocates the window if its assigned to a slot
+        """
+        for slot_num, slot in self.slot_manager.slots.items():
+            if slot.window == window:
+                self.slot_manager.deallocate_slot(slot_num)
+        # check if a window is unallocated and allocate it to a slot
+        unallocated_window = self.get_unallocated_window()
+        if unallocated_window:
+            self.add_window_to_slot(unallocated_window)
+
+
 
 # def track_processes(app_name: str, table_positions: dict, table_layout: dict):
 #     original_positions = {}  # Dictionary to store the original positions of windows
