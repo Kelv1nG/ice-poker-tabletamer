@@ -61,6 +61,26 @@ class SlotManager:
         else:
             raise exceptions.InvalidSlotNum(slot_num)
 
+    def add_window_to_empty_slot(self, window: gw.Window) -> None:
+        """
+        args:
+            window: window to be allocated
+        """
+        empty_slots = {key: value for key, value in self.slots.items() if value.window is None}
+        if len(empty_slots) > 0:
+            # assign to first empty slot in order
+            slot_num = next(iter(empty_slots.keys()))
+            self.allocate_window_to_slot(slot_num=slot_num, process_window=window)
+
+    def remove_window_from_slot(self, window: gw.Window) -> None:
+        """
+        args:
+            window: window to be deallocated
+        """
+        for slot_num, slot in self.slots.items():
+            if slot.window == window:
+                self.deallocate_slot(slot_num)
+
     def get_center_for_each_slot(self) -> dict[str, tuple[int, int]]:
         """
         calculate the center coordinates for each slot.
@@ -259,16 +279,6 @@ class TableManager:
         self.initialize_slots()
         assign_windows_to_slots()
 
-    def add_window_to_slot(self, window: gw.Window):
-        """
-        add window to list of tracked windows and assign window to an empty slot
-        """
-        empty_slots = {key: value for key, value in self.slot_manager.slots.items() if value.window is None}
-        if len(empty_slots) > 0:
-            # assign to first empty slot in order
-            slot_num = next(iter(empty_slots.keys()))
-            self.slot_manager.allocate_window_to_slot(slot_num=slot_num, process_window=window)
-
     def handle_event(self, event_type: EventType, window: gw.Window):
             match event_type:
                 case EventType.NEW_WINDOW:
@@ -279,7 +289,7 @@ class TableManager:
                     self.handle_window_terminated_event(window)
 
     def handle_new_window_event(self, window: gw.Window):
-        self.add_window_to_slot(window=window)
+        self.slot_manager.add_window_to_empty_slot(window=window)
 
     def handle_active_tab_changed_event(self, window: gw.Window):
         pass
@@ -289,13 +299,11 @@ class TableManager:
         removes it from the tracked windows list and
         deallocates the window if its assigned to a slot
         """
-        for slot_num, slot in self.slot_manager.slots.items():
-            if slot.window == window:
-                self.slot_manager.deallocate_slot(slot_num)
-        # check if a window is unallocated and allocate it to a slot
+        self.slot_manager.remove_window_from_slot(window)
+        # check if a window in tracked_windows is unallocated and allocate it to a slot
         unallocated_window = self.get_unallocated_window()
         if unallocated_window:
-            self.add_window_to_slot(unallocated_window)
+            self.slot_manager.add_window_to_empty_slot(unallocated_window)
 
 
 
