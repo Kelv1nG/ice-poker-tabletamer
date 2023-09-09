@@ -34,3 +34,22 @@ class Slot:
         if self.window:
             self.window.width = self.width
             self.window.height = self.height
+
+    @property
+    def window_center_coordinates(self) -> tuple[int, int]:
+        if self.window:
+            return (self.window.centery, self.window.centerx)
+        return (0, 0)
+
+    @property
+    def slot_center_coordinates(self) -> tuple[int, int]:
+        return (self.top - self.height / 2, self.left + self.width / 2)
+
+
+    @property
+    def is_center_outside_slot_boundary(self):
+        if self.window:
+            outside_x_boundary =  self.window.centerx < self.left or self.window.centerx > (self.left + self.width)
+            outside_y_boundary = self.window.centery < self.top or self.window.centery > (self.top + self.height)
+            return (outside_x_boundary or outside_y_boundary)
+        return False
