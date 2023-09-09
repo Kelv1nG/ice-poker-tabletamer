@@ -17,7 +17,6 @@ class TableLayOutManager(Generic[T]):
     def __init__(self, configuration_parser: type[IConfigurationParser]):
         self.table_templates: list[T] = []
         self.configuration_parser = configuration_parser
-        self.initialized = True
 
     @classmethod
     def get_instance(cls, configuration_parser: type[IConfigurationParser]):
