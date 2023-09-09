@@ -1,0 +1,3 @@
+when adding a new target window:
+    existing window -> new tab -> separate new tab to new window -> enter satisfies
+    this is to avoid switching of window locations

@@ -1,0 +1,5 @@
+WINDOW_CREATED_EVENT
+    assignt to closest slot not to first empty slot
+
+
+

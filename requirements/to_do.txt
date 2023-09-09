@@ -9,14 +9,11 @@
    - visual representation of layout - OK
    - save / load layout - OK
 
-3. arrange windows on start ( this includes resizing and assigning it to the initial slots ) - OK
-4. table / process tracking
-    threads:
+3. arrange windows on start ( this includes resizing and assigning it to the initial slots ) - FUCK MAY MALI!, assigns by slot order not the shit that i want
+4. table / process tracking - OK
+    thread
         - thread for checking of new spawned / changed(tab title) / deleted processes fitting the target app i.e chrome
-            - new_process_event, changed_process_event, deleted_event
-        - thread for checking of positions of slots / currently changing
-            - window_loc_changed
-
+            - new_process_event, changed_process_event, deleted_event, window_loc_changed
     event handler:
         new process event:
             - if all slots are taken do nothing
@@ -25,7 +22,15 @@
             - remove from slot if it no longer fits the criteria
             - check if there is an available slot and assign it to the nearest slot
         deleted event
-            - remove from slot
+            - check if it is assigned to a slot and remove from slot
+        window_loc_changed
+            - calc closest slot if its outside window boundaries, if closest slot is not empty
+              swap slots, otherwise just allocate window to slot
+
+5. hotkeys
+    thread:
+        mouse_
+
 
 
 
