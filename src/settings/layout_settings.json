@@ -3,20 +3,20 @@
         "table_count": 4,
         "table_configurations": {
             "slot_1": {
-                "top": 0,
-                "left": -1860
+                "top": 31,
+                "left": 48
             },
             "slot_2": {
-                "top": 39,
-                "left": -1237
+                "top": 33,
+                "left": 540
             },
             "slot_3": {
-                "top": 37,
-                "left": -697
+                "top": 34,
+                "left": 918
             },
             "slot_4": {
                 "top": 32,
-                "left": 62
+                "left": 1389
             }
         }
     }
