@@ -1,5 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtSignal
+
 from widgets.workers.task import Task
+
 
 class Worker(QObject):
     finished = pyqtSignal()

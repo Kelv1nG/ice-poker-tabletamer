@@ -13,6 +13,6 @@ class SlotAlreadyOccupied(Exception):
 class EmptySlot(Exception):
     ...
 
+
 class MultipleWindowsDetected(Exception):
     ...
-

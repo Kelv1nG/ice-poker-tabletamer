@@ -3,7 +3,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from services.tables.exceptions import NoTableFound
-from services.tables.table_config import IConfigurationParser, TableConfiguration
+from services.tables.table_config import (IConfigurationParser,
+                                          TableConfiguration)
 
 
 @pytest.fixture

@@ -1,6 +1,7 @@
 import pyautogui
 
-from utils.configuration_parser import ConfigurationParser, IConfigurationParser
+from utils.configuration_parser import (ConfigurationParser,
+                                        IConfigurationParser)
 
 from . import exceptions
 

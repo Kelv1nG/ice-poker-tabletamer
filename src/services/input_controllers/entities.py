@@ -1,4 +1,3 @@
-
 class KeyStates:
     _instance = None
 
@@ -9,7 +8,6 @@ class KeyStates:
 
     def __init__(self):
         self.left_button_pressed = False
-
 
 
 key_states = KeyStates()

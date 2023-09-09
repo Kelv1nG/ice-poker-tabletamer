@@ -1,6 +1,7 @@
 from typing import Any, Generic, TypeVar
 
-from utils.configuration_parser import ConfigurationParser, IConfigurationParser
+from utils.configuration_parser import (ConfigurationParser,
+                                        IConfigurationParser)
 from widgets.table_layout.table_template import TableTemplate
 
 T = TypeVar("T", bound=TableTemplate)

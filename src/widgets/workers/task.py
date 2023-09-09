@@ -1,19 +1,19 @@
+import time
+
+import pygetwindow as gw
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from services.layout.layout_manager import table_layout_manager
 from services.tables.entities import AppName
+from services.tables.events import EventType
 from services.tables.table_config import table_configuration
 from services.tables.table_manager import TableManager
 from services.tables.utilities import WindowsSelector
-from services.tables.events import EventType
-import pygetwindow as gw
-
-from PyQt6.QtCore import QObject, pyqtSignal
-
-import time
 
 table_manager = TableManager(
-            table_layout_manager=table_layout_manager,
-            table_configuration=table_configuration,
-        )
+    table_layout_manager=table_layout_manager,
+    table_configuration=table_configuration,
+)
 
 
 class Task(QObject):

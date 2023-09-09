@@ -1,14 +1,7 @@
 from PyQt6 import QtCore
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QSizePolicy,
-    QSpacerItem,
-    QVBoxLayout,
-)
+from PyQt6.QtWidgets import (QHBoxLayout, QLabel, QMessageBox, QPushButton,
+                             QSizePolicy, QSpacerItem, QVBoxLayout)
 
 from services.layout.layout_manager import table_layout_manager
 from widgets.utils.popup import PopupMessage

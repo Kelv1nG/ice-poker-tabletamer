@@ -1,21 +1,21 @@
-
 import math
+
 import pygetwindow as gw
 
-
+from services.input_controllers.entities import key_states
+from services.input_controllers.mouse_listener import mouse_listener
 from services.layout.layout_manager import TableLayOutManager
 
 from . import exceptions
 from .entities import Slot
+from .events import EventType
 from .table_config import TableConfiguration
 from .utilities import AppName, WindowsSelector
-from .events import EventType
-from services.input_controllers.mouse_listener import mouse_listener
-from services.input_controllers.entities import key_states
 
 # start the mouse listener
 # this function will start listening to mouse events
 mouse_listener.start()
+
 
 class SlotManager:
     """
@@ -73,7 +73,9 @@ class SlotManager:
         args:
             window: window to be allocated
         """
-        empty_slots = {key: value for key, value in self.slots.items() if value.window is None}
+        empty_slots = {
+            key: value for key, value in self.slots.items() if value.window is None
+        }
         if len(empty_slots) > 0:
             # assign to first empty slot in order
             slot_num = next(iter(empty_slots.keys()))
@@ -88,7 +90,9 @@ class SlotManager:
             if slot.window == window:
                 self.deallocate_window_from_slot(slot_num)
 
-    def get_closest_slot_to_window(self, window: gw.Window, assign_to_empty_slot: bool = False) -> str:
+    def get_closest_slot_to_window(
+        self, window: gw.Window, assign_to_empty_slot: bool = False
+    ) -> str:
         """
         gets the closest slot num given a window
 
@@ -102,13 +106,22 @@ class SlotManager:
 
         # Filter the slots based on the assign_to_empty_slot flag
         if assign_to_empty_slot:
-            filtered_slots = {slot_num: slot for slot_num, slot in self._slots.items() if slot.window is None}
+            filtered_slots = {
+                slot_num: slot
+                for slot_num, slot in self._slots.items()
+                if slot.window is None
+            }
         else:
             filtered_slots = self._slots
 
         # Find the closest slot
-        closest_slot_num = min(filtered_slots, key=lambda slot_num: self.calculate_distance(
-            win_coord=window_center, slot_coord=filtered_slots[slot_num].slot_center_coordinates))
+        closest_slot_num = min(
+            filtered_slots,
+            key=lambda slot_num: self.calculate_distance(
+                win_coord=window_center,
+                slot_coord=filtered_slots[slot_num].slot_center_coordinates,
+            ),
+        )
 
         return closest_slot_num
 
@@ -129,14 +142,18 @@ class SlotManager:
             deallocated_window = self.deallocate_window_from_slot(closest_slot_num)
             self.allocate_window_to_slot(slot_num=closest_slot_num, window=window)
             self.deallocate_window_from_slot(orig_slot_num)
-            self.allocate_window_to_slot(slot_num=orig_slot_num, window=deallocated_window)
+            self.allocate_window_to_slot(
+                slot_num=orig_slot_num, window=deallocated_window
+            )
         elif closest_slot.window is None:
             # assign the window to the closest slot
             self.deallocate_window_from_slot(orig_slot_num)
             self.allocate_window_to_slot(slot_num=closest_slot_num, window=window)
 
     def assign_window_to_closest_empty_slot(self, window: gw.Window):
-        closest_slot_num = self.get_closest_slot_to_window(window=window, assign_to_empty_slot=True)
+        closest_slot_num = self.get_closest_slot_to_window(
+            window=window, assign_to_empty_slot=True
+        )
         self.allocate_window_to_slot(slot_num=closest_slot_num, window=window)
 
     def get_center_for_each_slot(self) -> dict[str, tuple[int, int]]:
@@ -177,8 +194,7 @@ class SlotManager:
             int: The distance between the center of the window and the center of the slot coordinates.
         """
         return math.sqrt(
-            (win_coord[0] - slot_coord[0]) ** 2
-            + (win_coord[1] - slot_coord[1]) ** 2
+            (win_coord[0] - slot_coord[0]) ** 2 + (win_coord[1] - slot_coord[1]) ** 2
         )
 
     @property
@@ -198,6 +214,7 @@ class TableManager:
     """
     class for handling events and processes
     """
+
     def __init__(
         self,
         table_layout_manager: TableLayOutManager,
@@ -244,7 +261,9 @@ class TableManager:
 
     def get_target_windows(self) -> list[gw.Window]:
         windows = WindowsSelector.get_windows_by_app_name(AppName.CHROME)
-        return WindowsSelector.filter_windows_by_tab_title(tab_title=self.table_configuration.search_string, process_windows=windows)
+        return WindowsSelector.filter_windows_by_tab_title(
+            tab_title=self.table_configuration.search_string, process_windows=windows
+        )
 
     def get_unallocated_window(self) -> gw.Window | None:
         for window in self.tracked_windows:
@@ -264,9 +283,15 @@ class TableManager:
             2. If a new window is detected, it returns the detected window;
             otherwise, it returns None to indicate no new window detected.
         """
-        new_windows = [window for window in self.get_target_windows() if window not in self.tracked_windows]
+        new_windows = [
+            window
+            for window in self.get_target_windows()
+            if window not in self.tracked_windows
+        ]
 
-        if len(new_windows) > 1:  # Program assumed to detect only 1 window at a time per cycle
+        if (
+            len(new_windows) > 1
+        ):  # Program assumed to detect only 1 window at a time per cycle
             raise exceptions.MultipleWindowsDetected
 
         if new_windows:
@@ -288,7 +313,11 @@ class TableManager:
             2. If a window is terminated or no longer satisfied, it returns the terminated window;
             otherwise, it returns None to indicate no terminated window.
         """
-        deleted_windows = [window for window in self.tracked_windows if window not in self.get_target_windows()]
+        deleted_windows = [
+            window
+            for window in self.tracked_windows
+            if window not in self.get_target_windows()
+        ]
 
         if len(deleted_windows) > 1:
             raise exceptions.MultipleWindowsDetected
@@ -297,7 +326,10 @@ class TableManager:
             deleted_window = deleted_windows[0]
             self.tracked_windows.remove(deleted_window)
 
-        return bool(deleted_windows), deleted_windows[0] if deleted_windows else (False, None)
+        return bool(deleted_windows), deleted_windows[0] if deleted_windows else (
+            False,
+            None,
+        )
 
     def is_window_moved(self) -> tuple[bool, gw.Window | None]:
         """
@@ -402,7 +434,7 @@ class TableManager:
 
     def handle_window_moved_event(self, window: gw.Window):
         slot = self.slot_manager.get_slot_from_window(window=window)
-        if not key_states.left_button_pressed: # check if left mouse button is released
+        if not key_states.left_button_pressed:  # check if left mouse button is released
             if slot.is_center_outside_slot_boundary:
                 self.slot_manager.assign_window_to_closest_slot(window=window)
             else:

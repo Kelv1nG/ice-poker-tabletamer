@@ -10,7 +10,9 @@ if __name__ == "__main__":
         table_configuration=table_configuration,
     )
     windows = WindowsSelector.get_windows_by_app_name(app_name=AppName.CHROME)
-    filtered_windows = WindowsSelector.filter_windows_by_tab_title('SNG Tracker', windows)
+    filtered_windows = WindowsSelector.filter_windows_by_tab_title(
+        "SNG Tracker", windows
+    )
     print(filtered_windows)
 
     # process_tracker.initialize_slots()
