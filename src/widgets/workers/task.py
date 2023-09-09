@@ -46,9 +46,9 @@ class TrackProcess(Task):
         table_manager.initialize_tracked_windows()
         table_manager.arrange_layout_on_start()
         while not self.is_stopped:
-            has_new_window, new_window = table_manager.is_new_window_detected()
-            if has_new_window:
-                self.event_signal.emit(EventType.NEW_WINDOW, new_window)
+            event_type, window = table_manager.get_event()
+            if event_type is not None:
+                self.event_signal.emit(event_type, window)
 
     def handle_event(self, event_type: EventType, window: gw.Window):
         table_manager.handle_event(event_type=event_type, window=window)
