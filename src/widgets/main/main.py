@@ -30,6 +30,21 @@ class MainWindow(QMainWindow):
             self.ui.table_setup_save.clicked.connect(
                 lambda: table_setup_methods.save_settings(self.ui)
             )
+            self.ui.table_setup_grab_fold.clicked.connect(
+                lambda: table_setup_methods.grab_fold(self, self.ui)
+            )
+            self.ui.table_setup_grab_check_call.clicked.connect(
+                lambda: table_setup_methods.grab_check_call(self, self.ui)
+            )
+            self.ui.table_setup_grab_bet.clicked.connect(
+                lambda: table_setup_methods.grab_bet(self, self.ui)
+            )
+            self.ui.table_setup_grab_raise.clicked.connect(
+                lambda: table_setup_methods.grab_raise(self, self.ui)
+            )
+            self.ui.table_setup_grab_amount.clicked.connect(
+                lambda: table_setup_methods.grab_amount(self, self.ui)
+            )
 
         def visualize_grid():
             self.ui.visualize_grid.clicked.connect(layout_setup_methods.show_layout)
