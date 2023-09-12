@@ -3,24 +3,23 @@ import time
 import pygetwindow as gw
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from services.input_controllers.entities import key_states
+from services.input_controllers.mouse_controller import mouse_controller
+from services.input_controllers.mouse_listener import mouse_listener
 from services.layout.layout_manager import table_layout_manager
+from services.tables import exceptions as table_exceptions
+from services.tables.entities import Buttons
 from services.tables.events import EventType
 from services.tables.table_config import table_configuration
 from services.tables.table_manager import TableManager
-from services.input_controllers.mouse_listener import mouse_listener
-from services.tables.entities import Buttons
-from services.input_controllers.mouse_controller import mouse_controller
-from services.input_controllers.entities import key_states
-from services.tables import exceptions as table_exceptions
-
-
 
 table_manager = TableManager(
     table_layout_manager=table_layout_manager,
     table_configuration=table_configuration,
 )
 
-mouse_listener.start() # start mouse listener to handle mouse events
+mouse_listener.start()  # start mouse listener to handle mouse events
+
 
 class Task(QObject):
     stop_signal = pyqtSignal(bool)
@@ -73,7 +72,9 @@ class AssignButtonCoordinates(Task):
             if key_states.left_button_pressed:
                 point = mouse_controller.get_mouse_coordinates()
                 try:
-                    table_configuration.configure_button_coordinates(button_type=self.button_type, coordinates=(point.x, point.y))
+                    table_configuration.configure_button_coordinates(
+                        button_type=self.button_type, coordinates=(point.x, point.y)
+                    )
                 except table_exceptions.ButtonOutsideWindowError as e:
                     self.exception_signal.emit(e)
                 finally:

@@ -1,19 +1,18 @@
 from PyQt6.QtWidgets import QMessageBox
 
 from services.tables import exceptions as table_exceptions
-from services.tables.table_config import table_configuration
 from services.tables.entities import Buttons
-from widgets.workers.task import AssignButtonCoordinates
-from widgets.workers.worker import Worker
+from services.tables.table_config import table_configuration
 from widgets.main.main_thread import run_task
 from widgets.utils.popup import PopupMessage
-
+from widgets.workers.task import AssignButtonCoordinates
+from widgets.workers.worker import Worker
 
 MESSAGES = {
     "NO_TABLE_FOUND": "No table found, please verify if search string matches table name",
     "TABLE_DETECTED": "Table Detected, Current height: {table_height}, width: {table_width}",
     "TABLE_SETTING_SAVED": "Successfully saved table settings",
-    "BUTTON_COORDINATES_OUT_OF_BOUNDS": "Button Coordinate is outside the target window"
+    "BUTTON_COORDINATES_OUT_OF_BOUNDS": "Button Coordinate is outside the target window",
 }
 
 BUTTON_DISPLAY_MAP = {
@@ -21,7 +20,7 @@ BUTTON_DISPLAY_MAP = {
     Buttons.CHECK_CALL: "check_call_coord",
     Buttons.BET: "bet_coord",
     Buttons.RAISE: "raise_coord",
-    Buttons.AMOUNT: "amount_coord"
+    Buttons.AMOUNT: "amount_coord",
 }
 
 
@@ -45,15 +44,23 @@ def search_table(ui):
             ),
         )
 
+
 def update_coordinates_display(button_type: Buttons, ui):
-    x_coord, y_coord = table_configuration.current_button_coordinates.get(button_type.value, (0,0))
+    x_coord, y_coord = table_configuration.current_button_coordinates.get(
+        button_type.value, (0, 0)
+    )
     attribute = getattr(ui, BUTTON_DISPLAY_MAP[button_type])
     if attribute:
         attribute.setText(f"{str(x_coord)}, {str(y_coord)}")
 
+
 def show_unbounded_coordinates_popup(exc):
     if isinstance(exc, table_exceptions.ButtonOutsideWindowError):
-        PopupMessage(title="Unbounded Coordinates", message=MESSAGES["BUTTON_COORDINATES_OUT_OF_BOUNDS"])
+        PopupMessage(
+            title="Unbounded Coordinates",
+            message=MESSAGES["BUTTON_COORDINATES_OUT_OF_BOUNDS"],
+        )
+
 
 def grab_coordinate(self, button_type: Buttons, ui):
     def update_display():
@@ -64,24 +71,31 @@ def grab_coordinate(self, button_type: Buttons, ui):
     worker.finished.connect(update_display)
     run_task(self, worker=worker)
 
+
 def grab_fold(self, ui):
     grab_coordinate(self=self, button_type=Buttons.FOLD, ui=ui)
+
 
 def grab_check_call(self, ui):
     grab_coordinate(self=self, button_type=Buttons.CHECK_CALL, ui=ui)
 
+
 def grab_bet(self, ui):
     grab_coordinate(self=self, button_type=Buttons.BET, ui=ui)
+
 
 def grab_raise(self, ui):
     grab_coordinate(self=self, button_type=Buttons.RAISE, ui=ui)
 
+
 def grab_amount(self, ui):
     grab_coordinate(self=self, button_type=Buttons.AMOUNT, ui=ui)
+
 
 def load_coordinates(ui):
     for button in Buttons:
         update_coordinates_display(button, ui)
+
 
 def load_settings(ui):
     table_configuration.load_settings()

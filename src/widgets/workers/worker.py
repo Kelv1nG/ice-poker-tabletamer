@@ -14,12 +14,12 @@ class Worker(QObject):
 
     def run(self):
         self.stop_signal.connect(self.task.stop_signal)
-        self.task.stop_signal.connect(self.finish) # for cleaning up thread
+        self.task.stop_signal.connect(self.finish)  # for cleaning up thread
         self.task.exception_signal.connect(self.handle_exception)
 
         self.task.run()
 
-    def stop(self): # for sending signal to task
+    def stop(self):  # for sending signal to task
         self.stop_signal.emit(True)
         self.finished.emit()
 

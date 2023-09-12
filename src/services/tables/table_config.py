@@ -19,7 +19,7 @@ class TableConfiguration:
         self._current_width: int = 0
         self._current_height: int = 0
         self._search_string: str = ""
-        self._top: int = 0 # table top/left coordinates
+        self._top: int = 0  # table top/left coordinates
         self._left: int = 0
         self._button_coords = {}
         self.table = None
@@ -84,10 +84,12 @@ class TableConfiguration:
             self._top = self.table.top
             self._left = self.table.left
 
-    def configure_button_coordinates(self, button_type: Buttons, coordinates: tuple[int, int]):
+    def configure_button_coordinates(
+        self, button_type: Buttons, coordinates: tuple[int, int]
+    ):
         x, y = coordinates
-        outside_y =  (y < self._top) or (y > (self._top + self._current_height))
-        outside_x = (x < self._left) or (x > (self._left + self.current_width)) 
+        outside_y = (y < self._top) or (y > (self._top + self._current_height))
+        outside_x = (x < self._left) or (x > (self._left + self.current_width))
         if outside_y or outside_x:
             raise exceptions.ButtonOutsideWindowError
         self._button_coords[button_type.value] = coordinates
@@ -108,7 +110,7 @@ class TableConfiguration:
             search_string=self._search_string,
             top=self._top,
             left=self._left,
-            button_coordinates=self._button_coords
+            button_coordinates=self._button_coords,
         )
 
 

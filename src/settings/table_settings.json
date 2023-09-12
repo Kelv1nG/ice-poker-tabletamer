@@ -2,6 +2,30 @@
     "table_configuration": {
         "table_height": 678,
         "table_width": 516,
-        "search_string": "SNG Tracker"
+        "search_string": "SNG Tracker",
+        "top": 219,
+        "left": 83,
+        "button_coordinates": {
+            "FOLD": [
+                1088,
+                677
+            ],
+            "CHECK_CALL": [
+                1128,
+                696
+            ],
+            "BET": [
+                925,
+                719
+            ],
+            "RAISE": [
+                785,
+                703
+            ],
+            "AMOUNT": [
+                1093,
+                705
+            ]
+        }
     }
 }

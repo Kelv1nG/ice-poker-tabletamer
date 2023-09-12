@@ -3,7 +3,6 @@ import math
 import pygetwindow as gw
 
 from services.input_controllers.entities import key_states
-from services.input_controllers.mouse_listener import mouse_listener
 from services.layout.layout_manager import TableLayOutManager
 
 from . import exceptions
@@ -11,10 +10,6 @@ from .entities import Slot
 from .events import EventType
 from .table_config import TableConfiguration
 from .utilities import AppName, WindowsSelector
-
-# start the mouse listener
-# this function will start listening to mouse events
-mouse_listener.start()
 
 
 class SlotManager:
@@ -335,7 +330,7 @@ class TableManager:
         """
         Check if any window has been moved from its original position.
 
-        Returns:
+        returns:
             tuple: A tuple containing two elements:
                 - A boolean value indicating whether any window has been moved.
                 - If a window has been moved, it returns the moved window; otherwise, it returns None.

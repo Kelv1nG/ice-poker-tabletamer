@@ -8,12 +8,14 @@ class AppName(enum.Enum):
     FIREFOX = "Mozilla Firefox"
     CHROME = "Google Chrome"
 
+
 class Buttons(enum.Enum):
     FOLD = "FOLD"
     CHECK_CALL = "CHECK_CALL"
     BET = "BET"
     RAISE = "RAISE"
     AMOUNT = "AMOUNT"
+
 
 @dataclass
 class Slot:

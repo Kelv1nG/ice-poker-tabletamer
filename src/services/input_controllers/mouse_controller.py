@@ -13,5 +13,4 @@ class MouseController:
         return pa.position()
 
 
-
 mouse_controller = MouseController()

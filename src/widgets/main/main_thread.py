@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QThread
 
+
 def run_task(self, worker):
     self._worker = worker
     self._thread = QThread(self)  # set the parent to mainApp
