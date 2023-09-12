@@ -16,3 +16,7 @@ class EmptySlot(Exception):
 
 class MultipleWindowsDetected(Exception):
     ...
+
+
+class ButtonOutsideWindowError(Exception):
+    ...
