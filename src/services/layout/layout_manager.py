@@ -1,7 +1,6 @@
-from typing import Any, Generic, TypeVar
+from typing import Generic, TypeVar
 
-from utils.configuration_parser import (ConfigurationParser,
-                                        IConfigurationParser)
+from utils.configuration_parser import (LayoutConfigurationParser, TableConfigurationParser, IConfigurationParser)
 from widgets.table_layout.table_template import TableTemplate
 
 T = TypeVar("T", bound=TableTemplate)
@@ -15,27 +14,28 @@ class TableLayOutManager(Generic[T]):
             cls._shared_instance = super(TableLayOutManager, cls).__new__(cls)
         return cls._shared_instance
 
-    def __init__(self, configuration_parser: type[IConfigurationParser]):
+    def __init__(self, table_configuration_parser: type[IConfigurationParser], layout_configuration_parser: type[IConfigurationParser]):
         self.table_templates: list[T] = []
-        self.configuration_parser = configuration_parser
+        self.table_configuration_parser = table_configuration_parser
+        self.layout_configuration_parser = layout_configuration_parser
 
     @classmethod
-    def get_instance(cls, configuration_parser: type[IConfigurationParser]):
+    def get_instance(cls, table_configuration_parser: type[IConfigurationParser], layout_configuration_parser: type[IConfigurationParser]):
         if not cls._shared_instance:
-            cls._shared_instance = TableLayOutManager(configuration_parser)
+            cls._shared_instance = TableLayOutManager(table_configuration_parser=table_configuration_parser, layout_configuration_parser=layout_configuration_parser)
         return cls._shared_instance
 
     @property
     def table_settings(self) -> dict:
-        return self.configuration_parser.read_table_configuration()
+        return self.table_configuration_parser.read_configuration()
 
     @property
     def layout_settings(self) -> dict:
-        return self.configuration_parser.read_layout_configuration()
+        return self.layout_configuration_parser.read_configuration()
 
     @property
     def table_configurations(self) -> dict:
-        return self.configuration_parser.read_layout_configuration()[
+        return self.layout_configuration_parser.read_configuration()[
             "table_configurations"
         ]
 
@@ -46,12 +46,12 @@ class TableLayOutManager(Generic[T]):
                 "top": table.geometry().top(),
                 "left": table.geometry().left(),
             }
-        self.configuration_parser.write_layout_configuration(
+        self.layout_configuration_parser.write_configuration(
             table_configurations=table_configurations
         )
 
     def save_table_count(self, table_count: int):
-        self.configuration_parser.write_layout_configuration(table_count=table_count)
+        self.layout_configuration_parserr.write_configuration(table_count=table_count)
 
     def show_templates(
         self, cls_table_template: type[T], cls_main_table_template: type[T]
@@ -88,5 +88,5 @@ class TableLayOutManager(Generic[T]):
 
 
 table_layout_manager = TableLayOutManager.get_instance(
-    configuration_parser=ConfigurationParser
+    table_configuration_parser=TableConfigurationParser, layout_configuration_parser=LayoutConfigurationParser
 )

@@ -1,7 +1,6 @@
 import pyautogui
 
-from utils.configuration_parser import (ConfigurationParser,
-                                        IConfigurationParser)
+from utils.configuration_parser import TableConfigurationParser, IConfigurationParser
 
 from . import exceptions
 from .entities import Buttons
@@ -30,25 +29,25 @@ class TableConfiguration:
 
     @property
     def width(self):
-        return self.configuration_parser.read_table_configuration().get(
+        return self.configuration_parser.read_configuration().get(
             "table_width", 0
         )
 
     @property
     def height(self):
-        return self.configuration_parser.read_table_configuration().get(
+        return self.configuration_parser.read_configuration().get(
             "table_height", 0
         )
 
     @property
     def button_coordinates(self):
-        return self.configuration_parser.read_layout_configuration().get(
+        return self.configuration_parser.read_configuration().get(
             "button_coordinates", {}
         )
 
     @property
     def search_string(self):
-        return self.configuration_parser.read_table_configuration().get(
+        return self.configuration_parser.read_configuration().get(
             "search_string", 0
         )
 
@@ -95,7 +94,7 @@ class TableConfiguration:
         self._button_coords[button_type.value] = coordinates
 
     def load_settings(self):
-        self.table_settings = self.configuration_parser.read_table_configuration()
+        self.table_settings = self.configuration_parser.read_configuration()
         self._current_width = self.table_settings.get("table_width", 0)
         self._current_height = self.table_settings.get("table_height", 0)
         self._search_string = self.table_settings.get("search_string", "")
@@ -104,7 +103,7 @@ class TableConfiguration:
         self._button_coords = self.table_settings.get("button_coordinates", {})
 
     def save_settings(self):
-        self.configuration_parser.write_table_configuration(
+        self.configuration_parser.write_configuration(
             table_height=self._current_height,
             table_width=self._current_width,
             search_string=self._search_string,
@@ -114,4 +113,4 @@ class TableConfiguration:
         )
 
 
-table_configuration = TableConfiguration(ConfigurationParser)
+table_configuration = TableConfiguration(configuration_parser=TableConfigurationParser)
