@@ -304,145 +304,680 @@ QPushButton:pressed {
        <attribute name="title">
         <string>Hotkeys</string>
        </attribute>
-      </widget>
-      <widget class="QWidget" name="table_setup">
-       <attribute name="title">
-        <string>Table Setup</string>
-       </attribute>
-       <widget class="QWidget" name="horizontalLayoutWidget_3">
+       <widget class="QLineEdit" name="fold_hotkey">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>170</y>
-          <width>117</width>
-          <height>73</height>
+          <x>90</x>
+          <y>20</y>
+          <width>61</width>
+          <height>21</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Height :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTextEdit" name="table_height">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
-       <widget class="QWidget" name="horizontalLayoutWidget_4">
+       <widget class="QLabel" name="label_9">
         <property name="geometry">
          <rect>
-          <x>190</x>
-          <y>170</y>
-          <width>114</width>
-          <height>73</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Width :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTextEdit" name="table_width">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="horizontalLayoutWidget_5">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>70</y>
-          <width>371</width>
-          <height>71</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Table String :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="table_string_search"/>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QPushButton" name="table_setup_search">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>250</y>
-          <width>101</width>
-          <height>51</height>
+          <x>20</x>
+          <y>20</y>
+          <width>51</width>
+          <height>21</height>
          </rect>
         </property>
         <property name="text">
-         <string>Search</string>
+         <string>Fold :</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="table_setup_save">
+       <widget class="QLabel" name="label_10">
         <property name="geometry">
          <rect>
-          <x>210</x>
-          <y>250</y>
-          <width>101</width>
-          <height>51</height>
+          <x>20</x>
+          <y>50</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Check/call :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="check_call_hotkey">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>50</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_11">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>80</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Bet :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_12">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>110</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Raise :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="raise_hotkey">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>110</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="bet_hotkey">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>80</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_13">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>20</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 1 :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_14">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>50</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 2 :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_1">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>20</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_2">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>50</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_3">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>80</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_15">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>80</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 3 :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_16">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>110</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 4 :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_4">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>110</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_8">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>230</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_17">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>200</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 7 :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_18">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>140</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 5 :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_5">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>140</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_6">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>170</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_7">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>200</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_19">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>170</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 6 :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_20">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>230</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 8 :</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>270</y>
+          <width>111</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
          <string>Save</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_21">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>10</y>
-          <width>381</width>
+          <x>170</x>
+          <y>260</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 9 :</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_9">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>260</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="hk_move_to_slot_10">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>290</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_22">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>290</y>
+          <width>131</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>move cursor to slot 10 :</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="table_setup">
+       <attribute name="title">
+        <string>Table Setup</string>
+       </attribute>
+       <widget class="QPushButton" name="table_setup_save">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>290</y>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Open desired a single table and input table name then press search</string>
+         <string>Save</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_7">
+       <widget class="QPushButton" name="table_setup_search">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>30</y>
-          <width>341</width>
-          <height>41</height>
+          <x>80</x>
+          <y>290</y>
+          <width>91</width>
+          <height>31</height>
          </rect>
         </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::PreventContextMenu</enum>
-        </property>
         <property name="text">
-         <string>if detected, table should be highlighted, as well as height and width to be populated</string>
+         <string>Search</string>
         </property>
-        <property name="textFormat">
-         <enum>Qt::AutoText</enum>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>391</width>
+          <height>101</height>
+         </rect>
         </property>
-        <property name="wordWrap">
-         <bool>true</bool>
+        <property name="title">
+         <string>Table Properties</string>
         </property>
+        <widget class="QLabel" name="label_6">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Search String :</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="table_string_search">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>20</y>
+           <width>281</width>
+           <height>20</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>50</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>     Height :</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="table_height">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>51</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>50</y>
+           <width>41</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Width :</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="table_width">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>50</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_31">
+         <property name="geometry">
+          <rect>
+           <x>290</x>
+           <y>90</y>
+           <width>31</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Raise :</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>391</width>
+          <height>161</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Button Coordinates</string>
+        </property>
+        <widget class="QTextEdit" name="fold_coord">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>20</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_23">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>20</y>
+           <width>31</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fold :</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="check_call_coord">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>20</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_24">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>20</y>
+           <width>71</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>  Check/Call :</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_26">
+         <property name="geometry">
+          <rect>
+           <x>280</x>
+           <y>20</y>
+           <width>41</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>    Bet :</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_27">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>60</y>
+           <width>31</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Raise :</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="bet_coord">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>20</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="raise_coord">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="table_setup_grab_fold">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>100</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grab Fold</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="table_setup_grab_check_call">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>100</y>
+           <width>101</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grab Check / Call</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="table_setup_grab_bet">
+         <property name="geometry">
+          <rect>
+           <x>310</x>
+           <y>100</y>
+           <width>61</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grab Bet</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="table_setup_grab_raise">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>130</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grab Raise</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_32">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>60</y>
+           <width>51</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Amount:</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="amount_coord">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>60</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="table_setup_grab_amount">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>130</y>
+           <width>101</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Grab Amount</string>
+         </property>
+        </widget>
        </widget>
       </widget>
      </widget>
