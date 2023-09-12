@@ -8,6 +8,7 @@ class KeyStates:
 
     def __init__(self):
         self.left_button_pressed = False
+        self.right_button_pressed = False
 
 
 key_states = KeyStates()
