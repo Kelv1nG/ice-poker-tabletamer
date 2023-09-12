@@ -1,5 +1,3 @@
-from time import sleep
-
 from widgets.main.main_thread import run_task
 from widgets.workers.task import TrackProcess
 from widgets.workers.worker import Worker
