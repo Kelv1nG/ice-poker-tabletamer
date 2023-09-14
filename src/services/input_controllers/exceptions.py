@@ -1,0 +1,3 @@
+class DuplicateHotkeysError(Exception):
+    ...
+
