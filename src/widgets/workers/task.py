@@ -6,17 +6,12 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from services.input_controllers.entities import key_states
 from services.input_controllers.mouse_controller import mouse_controller
 from services.input_controllers.mouse_listener import mouse_listener
-from services.layout.layout_manager import table_layout_manager
 from services.tables import exceptions as table_exceptions
 from services.tables.entities import Buttons
 from services.tables.events import EventType
 from services.tables.table_config import table_configuration
-from services.tables.table_manager import TableManager
-
-table_manager = TableManager(
-    table_layout_manager=table_layout_manager,
-    table_configuration=table_configuration,
-)
+from services.tables.table_manager import table_manager
+from services.input_controllers.hotkey_manager import hotkey_manager
 
 mouse_listener.start()  # start mouse listener to handle mouse events
 
@@ -51,11 +46,14 @@ class TrackProcess(Task):
     def run(self):
         table_manager.initialize_tracked_windows()
         table_manager.arrange_layout_on_start()
+        hotkey_manager.start()
+
         while not self.is_stopped:
             event_type, window = table_manager.get_event()
             if event_type is not None:
                 self.event_signal.emit(event_type, window)
         self.stop_signal.emit(True)
+        hotkey_manager.stop()
 
     def handle_event(self, event_type: EventType, window: gw.Window):
         table_manager.handle_event(event_type=event_type, window=window)

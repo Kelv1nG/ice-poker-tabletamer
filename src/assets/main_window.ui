@@ -24,7 +24,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="main">
        <attribute name="title">
@@ -304,7 +304,7 @@ QPushButton:pressed {
        <attribute name="title">
         <string>Hotkeys</string>
        </attribute>
-       <widget class="QLineEdit" name="fold_hotkey">
+       <widget class="QLineEdit" name="hk_fold">
         <property name="geometry">
          <rect>
           <x>90</x>
@@ -340,7 +340,7 @@ QPushButton:pressed {
          <string>Check/call :</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="check_call_hotkey">
+       <widget class="QLineEdit" name="hk_check_call">
         <property name="geometry">
          <rect>
           <x>90</x>
@@ -376,7 +376,7 @@ QPushButton:pressed {
          <string>Raise :</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="raise_hotkey">
+       <widget class="QLineEdit" name="hk_raise">
         <property name="geometry">
          <rect>
           <x>90</x>
@@ -386,7 +386,7 @@ QPushButton:pressed {
          </rect>
         </property>
        </widget>
-       <widget class="QLineEdit" name="bet_hotkey">
+       <widget class="QLineEdit" name="hk_bet">
         <property name="geometry">
          <rect>
           <x>90</x>
@@ -580,7 +580,7 @@ QPushButton:pressed {
          <string>move cursor to slot 8 :</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="hotkeys_save">
         <property name="geometry">
          <rect>
           <x>20</x>

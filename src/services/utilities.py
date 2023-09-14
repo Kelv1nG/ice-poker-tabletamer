@@ -38,3 +38,7 @@ class WindowsSelector:
             value = (window.centery, window.centerx, window)
             center_coordinates.append(value)
         return center_coordinates
+
+    @staticmethod
+    def get_active_window() -> gw.Window:
+        return gw.getActiveWindow()

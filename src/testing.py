@@ -2,7 +2,7 @@ from services.layout.layout_manager import table_layout_manager
 from services.tables.entities import AppName
 from services.tables.table_config import table_configuration
 from services.tables.table_manager import ProcessTracker
-from services.tables.utilities import WindowsSelector
+from services.utilities import WindowsSelector
 
 if __name__ == "__main__":
     process_tracker = ProcessTracker(

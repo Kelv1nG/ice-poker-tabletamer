@@ -1,7 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow
 
-from . import layout_setup_methods, main_methods, table_setup_methods
+from . import layout_setup_methods, main_methods, table_setup_methods, hotkeys_setup_methods
 
 
 class MainWindow(QMainWindow):
@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         table_setup_methods.load_settings(self.ui)
         layout_setup_methods.load_settings(self.ui)
         main_methods.hide_labels_on_stop(self.ui)
+        hotkeys_setup_methods.load_settings(self.ui)
 
         self._worker = None
         self._thread = None
@@ -46,6 +47,11 @@ class MainWindow(QMainWindow):
                 lambda: table_setup_methods.grab_amount(self, self.ui)
             )
 
+        def setup_hotkeys():
+            self.ui.hotkeys_save.clicked.connect(
+                lambda: hotkeys_setup_methods.save_settings(self.ui)
+            )
+
         def visualize_grid():
             self.ui.visualize_grid.clicked.connect(layout_setup_methods.show_layout)
 
@@ -63,6 +69,7 @@ class MainWindow(QMainWindow):
             )
 
         setup_table()
+        setup_hotkeys()
         visualize_grid()
         add_reduce_tables()
         connect_application_start()
