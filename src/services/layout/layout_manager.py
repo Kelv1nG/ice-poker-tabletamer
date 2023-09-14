@@ -66,7 +66,7 @@ class TableLayOutManager(Generic[T]):
         )
 
     def save_table_count(self, table_count: int):
-        self.layout_configuration_parserr.write_configuration(table_count=table_count)
+        self.layout_configuration_parser.write_configuration(table_count=table_count)
 
     def show_templates(
         self, cls_table_template: type[T], cls_main_table_template: type[T]

@@ -12,8 +12,7 @@ from .mouse_controller import mouse_controller
 class HotkeyManager:
     def __init__(
         self,
-        hotkey_configuration=hotkey_configuration,
-        mouse_controller=mouse_controller,
+        hotkey_configuration=hotkey_configuration
     ):
         self.hotkey_configuration = hotkey_configuration
         self.keyboard_listener = None
@@ -26,34 +25,17 @@ class HotkeyManager:
 
     def populate_reverse_hotkeys(self):
         """
-        map and store the hotkey to an action for easier access
+        map and store the hotkey to an action for accessing it later on
         """
         self.key_to_action = {value: key for key, value in self.hotkeys.items()}
         for key, value in self.key_to_action.items():
             if key.isalnum():
                 self.key_to_action[key] = value.upper()
 
-    def on_press(self, key):
-        if hasattr(key, "char") and key.char is not None:
-            key_char = key.char
-            action = self.key_to_action.get(
-                key_char.upper(), self.key_to_action.get(key_char, None)
-            )
-            if action:
-                self.handle_action(action)
-
-    def start(self):
-        self.update_relative_coordinates()
-
-        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
-        self.populate_reverse_hotkeys()
-        self.keyboard_listener.start()
-
-    def stop(self):
-        self.keyboard_listener.stop()
-        self.keyboard_listener = None
-
-    def update_relative_coordinates(self):
+    def update_relative_button_coordinates(self):
+        """
+        updates the relative coordinates of a button given a slot / window
+        """
         for action, coordinate in table_configuration.button_coordinates.items():
             relative_coordinate = (
                 coordinate[0] - table_configuration.left,
@@ -69,7 +51,6 @@ class HotkeyManager:
                 slot_coordinate[0] + relative_coordinate[0],
                 slot_coordinate[1] + relative_coordinate[1],
             )
-
         return get_absolute_coordinates(
             slot_coordinate, self.relative_coordinates[button_type.value]
         )
@@ -86,6 +67,33 @@ class HotkeyManager:
                 return slot.left, slot.top
         return None
 
+    def on_press(self, key):
+        if hasattr(key, "char") and key.char is not None:
+            key_char = key.char
+            action = self.key_to_action.get(
+                key_char.upper(), self.key_to_action.get(key_char, None)
+            )
+            if action:
+                self.handle_action(action)
+
+    def start(self):
+        self.update_relative_button_coordinates()
+
+        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
+        self.populate_reverse_hotkeys()
+        self.keyboard_listener.start()
+
+    def stop(self):
+        self.keyboard_listener.stop()
+        self.keyboard_listener = None
+
+    def move_to_amount_field(self, slot_coord: tuple[int, int]):
+        """
+        move the cursor to the amount field for a given slot.
+        """
+        button_coord = self.get_button_coordinate(slot_coord, button_type=Buttons.AMOUNT)
+        mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
+
     def perform_base_action(
         self, button_type: Buttons, move_to_amount_field: bool = False
     ):
@@ -97,24 +105,22 @@ class HotkeyManager:
         """
         orig_mouse_coord = mouse_controller.get_mouse_coordinates()
         slot_coord = self.get_slot_coordinates()
-        if slot_coord:
-            button_coord = self.get_button_coordinate(
-                slot_coord, button_type=button_type
-            )
-            mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
-            mouse_controller.left_click()
-            if move_to_amount_field:
-                button_coord = self.get_button_coordinate(
-                    slot_coord, button_type=Buttons.AMOUNT
-                )
-                mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
-            else:
-                mouse_controller.move_to_coordinates(
-                    orig_mouse_coord[0], orig_mouse_coord[1]
-                )
+        if not slot_coord:
+            return
+
+        button_coord = self.get_button_coordinate(
+            slot_coord, button_type=button_type
+        )
+        mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
+        mouse_controller.left_click()
+
+        if move_to_amount_field:
+            self.move_to_amount_field(slot_coord)
+        else:
+            mouse_controller.move_to_coordinates(orig_mouse_coord[0], orig_mouse_coord[1])
 
     def perform_fold(self):
-        self.perform_base_function(button_type=Buttons.FOLD)
+        self.perform_base_action(button_type=Buttons.FOLD)
 
     def perform_check_call(self):
         self.perform_base_action(button_type=Buttons.CHECK_CALL)
@@ -137,6 +143,4 @@ class HotkeyManager:
                 self.perform_raise()
 
 
-hotkey_manager = HotkeyManager(
-    hotkey_configuration=hotkey_configuration, mouse_controller=mouse_controller
-)
+hotkey_manager = HotkeyManager(hotkey_configuration=hotkey_configuration)
