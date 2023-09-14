@@ -1,6 +1,6 @@
 import pyautogui
 
-from utils.configuration_parser import TableConfigurationParser, IConfigurationParser
+from utils.configuration_parser import IConfigurationParser, TableConfigurationParser
 
 from . import exceptions
 from .entities import Buttons
@@ -29,27 +29,19 @@ class TableConfiguration:
 
     @property
     def top(self):
-        return self.configuration_parser.read_configuration().get(
-            "top", 0
-        )
+        return self.configuration_parser.read_configuration().get("top", 0)
 
     @property
     def left(self):
-        return self.configuration_parser.read_configuration().get(
-            "left", 0
-        )
+        return self.configuration_parser.read_configuration().get("left", 0)
 
     @property
     def width(self):
-        return self.configuration_parser.read_configuration().get(
-            "table_width", 0
-        )
+        return self.configuration_parser.read_configuration().get("table_width", 0)
 
     @property
     def height(self):
-        return self.configuration_parser.read_configuration().get(
-            "table_height", 0
-        )
+        return self.configuration_parser.read_configuration().get("table_height", 0)
 
     @property
     def button_coordinates(self):
@@ -59,9 +51,7 @@ class TableConfiguration:
 
     @property
     def search_string(self):
-        return self.configuration_parser.read_configuration().get(
-            "search_string", 0
-        )
+        return self.configuration_parser.read_configuration().get("search_string", 0)
 
     @property
     def current_width(self):

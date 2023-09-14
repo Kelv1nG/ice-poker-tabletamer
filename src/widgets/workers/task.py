@@ -4,6 +4,7 @@ import pygetwindow as gw
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from services.input_controllers.entities import key_states
+from services.input_controllers.hotkey_manager import hotkey_manager
 from services.input_controllers.mouse_controller import mouse_controller
 from services.input_controllers.mouse_listener import mouse_listener
 from services.tables import exceptions as table_exceptions
@@ -11,7 +12,6 @@ from services.tables.entities import Buttons
 from services.tables.events import EventType
 from services.tables.table_config import table_configuration
 from services.tables.table_manager import table_manager
-from services.input_controllers.hotkey_manager import hotkey_manager
 
 mouse_listener.start()  # start mouse listener to handle mouse events
 

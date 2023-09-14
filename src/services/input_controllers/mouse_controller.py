@@ -1,4 +1,5 @@
 import pyautogui as pa
+
 pa.PAUSE = 0
 
 

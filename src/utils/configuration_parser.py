@@ -82,7 +82,7 @@ class HotkeyConfigurationParser(IConfigurationParser):
             file_contents = file.read()
             parsed_settings = json.loads(file_contents)
 
-        parsed_settings["hotkey_configuration"] = kwargs['hotkeys']
+        parsed_settings["hotkey_configuration"] = kwargs["hotkeys"]
 
         with open(BASE_DIR / "settings" / filename, "w") as file:
             json_string = json.dumps(parsed_settings, indent=4)

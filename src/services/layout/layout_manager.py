@@ -1,6 +1,10 @@
 from typing import Generic, TypeVar
 
-from utils.configuration_parser import (LayoutConfigurationParser, TableConfigurationParser, IConfigurationParser)
+from utils.configuration_parser import (
+    IConfigurationParser,
+    LayoutConfigurationParser,
+    TableConfigurationParser,
+)
 from widgets.table_layout.table_template import TableTemplate
 
 T = TypeVar("T", bound=TableTemplate)
@@ -14,15 +18,26 @@ class TableLayOutManager(Generic[T]):
             cls._shared_instance = super(TableLayOutManager, cls).__new__(cls)
         return cls._shared_instance
 
-    def __init__(self, table_configuration_parser: type[IConfigurationParser], layout_configuration_parser: type[IConfigurationParser]):
+    def __init__(
+        self,
+        table_configuration_parser: type[IConfigurationParser],
+        layout_configuration_parser: type[IConfigurationParser],
+    ):
         self.table_templates: list[T] = []
         self.table_configuration_parser = table_configuration_parser
         self.layout_configuration_parser = layout_configuration_parser
 
     @classmethod
-    def get_instance(cls, table_configuration_parser: type[IConfigurationParser], layout_configuration_parser: type[IConfigurationParser]):
+    def get_instance(
+        cls,
+        table_configuration_parser: type[IConfigurationParser],
+        layout_configuration_parser: type[IConfigurationParser],
+    ):
         if not cls._shared_instance:
-            cls._shared_instance = TableLayOutManager(table_configuration_parser=table_configuration_parser, layout_configuration_parser=layout_configuration_parser)
+            cls._shared_instance = TableLayOutManager(
+                table_configuration_parser=table_configuration_parser,
+                layout_configuration_parser=layout_configuration_parser,
+            )
         return cls._shared_instance
 
     @property
@@ -88,5 +103,6 @@ class TableLayOutManager(Generic[T]):
 
 
 table_layout_manager = TableLayOutManager.get_instance(
-    table_configuration_parser=TableConfigurationParser, layout_configuration_parser=LayoutConfigurationParser
+    table_configuration_parser=TableConfigurationParser,
+    layout_configuration_parser=LayoutConfigurationParser,
 )

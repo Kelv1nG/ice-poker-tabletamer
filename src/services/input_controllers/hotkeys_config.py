@@ -1,6 +1,7 @@
-from utils.configuration_parser import IConfigurationParser, HotkeyConfigurationParser
-from services.tables.table_config import table_configuration
 from services.tables.entities import Buttons
+from services.tables.table_config import table_configuration
+from utils.configuration_parser import HotkeyConfigurationParser, IConfigurationParser
+
 from . import exceptions as hotkey_exceptions
 
 
@@ -16,13 +17,13 @@ class HotkeyConfiguration:
         self.hotkeys = {}
         self.configuration_parser = configuration_parser
 
-        self.load_settings() # load initial set hotkeys
+        self.load_settings()  # load initial set hotkeys
 
     def load_settings(self):
         self.hotkeys = self.configuration_parser.read_configuration()
 
     def check_for_hk_duplicates(self) -> None:
-        hotkey_values = [value for value in self.hotkeys.values() if value != '']
+        hotkey_values = [value for value in self.hotkeys.values() if value != ""]
         if len(set(hotkey_values)) < len(hotkey_values):
             raise hotkey_exceptions.DuplicateHotkeysError
 
@@ -32,6 +33,6 @@ class HotkeyConfiguration:
         self.configuration_parser.write_configuration(hotkeys=self.hotkeys)
 
 
-
-
-hotkey_configuration = HotkeyConfiguration(configuration_parser=HotkeyConfigurationParser)
+hotkey_configuration = HotkeyConfiguration(
+    configuration_parser=HotkeyConfigurationParser
+)

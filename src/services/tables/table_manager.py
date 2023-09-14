@@ -5,11 +5,11 @@ import pygetwindow as gw
 from services.input_controllers.entities import key_states
 from services.layout.layout_manager import TableLayOutManager, table_layout_manager
 
+from ..utilities import AppName, WindowsSelector
 from . import exceptions
 from .entities import Slot
 from .events import EventType
 from .table_config import TableConfiguration, table_configuration
-from ..utilities import AppName, WindowsSelector
 
 
 class SlotManager:
@@ -211,6 +211,7 @@ class TableManager:
     """
     singleton class for handling events and processes
     """
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -444,4 +445,6 @@ class TableManager:
                 slot.move_to_assigned_slot()
 
 
-table_manager = TableManager(table_layout_manager=table_layout_manager, table_configuration=table_configuration)
+table_manager = TableManager(
+    table_layout_manager=table_layout_manager, table_configuration=table_configuration
+)

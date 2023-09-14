@@ -1,7 +1,12 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow
 
-from . import layout_setup_methods, main_methods, table_setup_methods, hotkeys_setup_methods
+from . import (
+    hotkeys_setup_methods,
+    layout_setup_methods,
+    main_methods,
+    table_setup_methods,
+)
 
 
 class MainWindow(QMainWindow):
