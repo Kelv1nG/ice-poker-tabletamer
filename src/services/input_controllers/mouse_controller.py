@@ -1,4 +1,5 @@
 import pyautogui as pa
+pa.PAUSE = 0
 
 
 class MouseController:
@@ -11,6 +12,12 @@ class MouseController:
 
     def get_mouse_coordinates(self):
         return pa.position()
+
+    def left_click(self) -> None:
+        pa.click()
+
+    def move_to_coordinates(self, x: int, y: int) -> None:
+        pa.moveTo(x, y)
 
 
 mouse_controller = MouseController()
