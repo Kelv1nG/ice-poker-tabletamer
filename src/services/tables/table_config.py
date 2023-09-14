@@ -28,6 +28,18 @@ class TableConfiguration:
         self.load_settings()
 
     @property
+    def top(self):
+        return self.configuration_parser.read_configuration().get(
+            "top", 0
+        )
+
+    @property
+    def left(self):
+        return self.configuration_parser.read_configuration().get(
+            "left", 0
+        )
+
+    @property
     def width(self):
         return self.configuration_parser.read_configuration().get(
             "table_width", 0
@@ -63,7 +75,6 @@ class TableConfiguration:
     def current_button_coordinates(self):
         return self._button_coords
 
-    @search_string.setter
     def set_search_string(self, search_string: str):
         self._search_string = search_string
 
@@ -82,6 +93,7 @@ class TableConfiguration:
             self._current_height = self.table.height
             self._top = self.table.top
             self._left = self.table.left
+            self.set_search_string(table_name)
 
     def configure_button_coordinates(
         self, button_type: Buttons, coordinates: tuple[int, int]
