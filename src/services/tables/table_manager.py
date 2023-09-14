@@ -3,13 +3,13 @@ import math
 import pygetwindow as gw
 
 from services.input_controllers.entities import key_states
-from services.layout.layout_manager import TableLayOutManager
+from services.layout.layout_manager import TableLayOutManager, table_layout_manager
 
 from . import exceptions
 from .entities import Slot
 from .events import EventType
-from .table_config import TableConfiguration
-from .utilities import AppName, WindowsSelector
+from .table_config import TableConfiguration, table_configuration
+from ..utilities import AppName, WindowsSelector
 
 
 class SlotManager:
@@ -87,7 +87,7 @@ class SlotManager:
 
     def get_closest_slot_to_window(
         self, window: gw.Window, assign_to_empty_slot: bool = False
-    ) -> str:
+    ) -> str | None:
         """
         gets the closest slot num given a window
 
@@ -95,7 +95,7 @@ class SlotManager:
             window: window in which distance will be calculated
             assign_to_empty_slot (bool, optional): Whether to assign to an empty slot. Defaults to False.
         returns:
-            str: closest slot num
+            str | None: The closest slot number or None if assign_to_empty_slot is True and all slots are occupied.
         """
         window_center = (window.centery, window.centerx)
 
@@ -110,15 +110,16 @@ class SlotManager:
             filtered_slots = self._slots
 
         # Find the closest slot
-        closest_slot_num = min(
-            filtered_slots,
-            key=lambda slot_num: self.calculate_distance(
-                win_coord=window_center,
-                slot_coord=filtered_slots[slot_num].slot_center_coordinates,
-            ),
-        )
-
-        return closest_slot_num
+        if filtered_slots:
+            closest_slot_num = min(
+                filtered_slots,
+                key=lambda slot_num: self.calculate_distance(
+                    win_coord=window_center,
+                    slot_coord=filtered_slots[slot_num].slot_center_coordinates,
+                ),
+            )
+            return closest_slot_num
+        return None
 
     def assign_window_to_closest_slot(self, window: gw.Window):
         """
@@ -149,7 +150,8 @@ class SlotManager:
         closest_slot_num = self.get_closest_slot_to_window(
             window=window, assign_to_empty_slot=True
         )
-        self.allocate_window_to_slot(slot_num=closest_slot_num, window=window)
+        if closest_slot_num:
+            self.allocate_window_to_slot(slot_num=closest_slot_num, window=window)
 
     def get_center_for_each_slot(self) -> dict[str, tuple[int, int]]:
         """
@@ -207,8 +209,14 @@ class SlotManager:
 
 class TableManager:
     """
-    class for handling events and processes
+    singleton class for handling events and processes
     """
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(TableManager, cls).__new__(cls)
+        return cls._instance
 
     def __init__(
         self,
@@ -434,3 +442,6 @@ class TableManager:
                 self.slot_manager.assign_window_to_closest_slot(window=window)
             else:
                 slot.move_to_assigned_slot()
+
+
+table_manager = TableManager(table_layout_manager=table_layout_manager, table_configuration=table_configuration)
