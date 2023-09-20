@@ -23,6 +23,10 @@ class HotkeyManager:
     def hotkeys(self):
         return self.hotkey_configuration.hotkeys
 
+    def win32_event_filter(self, msg, data):
+        if data.flags:
+            return False
+
     def populate_reverse_hotkeys(self):
         """
         map and store the hotkey to an action for accessing it later on
@@ -79,7 +83,9 @@ class HotkeyManager:
     def start(self):
         self.update_relative_button_coordinates()
 
-        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
+        self.keyboard_listener = keyboard.Listener(
+            on_press=self.on_press, win32_event_filter=self.win32_event_filter
+        )
         self.populate_reverse_hotkeys()
         self.keyboard_listener.start()
 
