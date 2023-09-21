@@ -1,6 +1,6 @@
 import pyautogui as pa
 
-pa.PAUSE = 0
+pa.PAUSE = 0.01
 
 
 class MouseController:

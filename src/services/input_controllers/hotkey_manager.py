@@ -1,4 +1,4 @@
-from pynput import keyboard
+from pynput import keyboard, mouse
 
 from services.tables.entities import Buttons
 from services.tables.table_config import table_configuration
@@ -7,6 +7,8 @@ from services.utilities import WindowsSelector
 
 from .hotkeys_config import hotkey_configuration
 from .mouse_controller import mouse_controller
+
+import threading
 
 
 class HotkeyManager:
@@ -18,6 +20,7 @@ class HotkeyManager:
         self.keyboard_listener = None
         self.key_to_action = {}
         self.relative_coordinates = {}
+        self.thread = None
 
     @property
     def hotkeys(self):
@@ -80,18 +83,29 @@ class HotkeyManager:
             if action:
                 self.handle_action(action)
 
+    def on_click(self, x, y, button, pressed):
+        if pressed and (action := self.key_to_action.get(str(button))):
+            self.thread = threading.Thread(target=self.handle_action, args=(action,))
+            self.thread.start()
+
     def start(self):
         self.update_relative_button_coordinates()
 
         self.keyboard_listener = keyboard.Listener(
             on_press=self.on_press, win32_event_filter=self.win32_event_filter
         )
+        self.mouse_listener = mouse.Listener(
+            on_click=self.on_click, win32_event_filter=self.win32_event_filter
+        )
         self.populate_reverse_hotkeys()
         self.keyboard_listener.start()
+        self.mouse_listener.start()
 
     def stop(self):
         self.keyboard_listener.stop()
         self.keyboard_listener = None
+        self.mouse_listener.stop()
+        self.mouse_listener = None
 
     def move_to_amount_field(self, slot_coord: tuple[int, int]):
         """
