@@ -1,3 +1,5 @@
+import threading
+
 from pynput import keyboard, mouse
 
 from services.tables.entities import Buttons
@@ -5,18 +7,13 @@ from services.tables.table_config import table_configuration
 from services.tables.table_manager import table_manager
 from services.utilities import WindowsSelector
 
+from . import constants
 from .hotkeys_config import hotkey_configuration
 from .mouse_controller import mouse_controller
 
-import threading
-from . import constants
-
 
 class HotkeyManager:
-    def __init__(
-        self,
-        hotkey_configuration=hotkey_configuration
-    ):
+    def __init__(self, hotkey_configuration=hotkey_configuration):
         self.hotkey_configuration = hotkey_configuration
         self.keyboard_listener = None
         self.mouse_listener = None
@@ -41,8 +38,10 @@ class HotkeyManager:
         are handled within this function.
         """
         if msg in constants.SUPPRESSED_EVENTS and self.mouse_listener:
-            button = constants.MOUSE_MESSAGE_DATA_TO_BUTTON_MAP.get((msg, data.mouseData), None)
-            if (action := self.get_action_from_button(button)):
+            button = constants.MOUSE_MESSAGE_DATA_TO_BUTTON_MAP.get(
+                (msg, data.mouseData), None
+            )
+            if action := self.get_action_from_button(button):
                 self.start_action_thread(action)
             self.mouse_listener.suppress_event()
         if data.flags:
@@ -81,11 +80,13 @@ class HotkeyManager:
         returns:
             tuple[int, int]: a tuple of (x, y) coordinates
         """
+
         def get_absolute_coordinates(slot_coordinate, relative_coordinate):
             return (
                 slot_coordinate[0] + relative_coordinate[0],
                 slot_coordinate[1] + relative_coordinate[1],
             )
+
         return get_absolute_coordinates(
             slot_coordinate, self.relative_coordinates[button_type.value]
         )
@@ -157,7 +158,9 @@ class HotkeyManager:
         args:
             slot_coord (tuple[int, int]): A tuple containing the (x, y) coordinates of the slot.
         """
-        button_coord_x, button_coord_y = self.get_button_coordinate(slot_coord, button_type=Buttons.AMOUNT)
+        button_coord_x, button_coord_y = self.get_button_coordinate(
+            slot_coord, button_type=Buttons.AMOUNT
+        )
         mouse_controller.move_to_coordinates(button_coord_x, button_coord_y)
 
     def perform_base_action(
@@ -169,7 +172,10 @@ class HotkeyManager:
         simulates left click of button and moves the cursor afterwards whether the action
         requires to put in a desired amount
         """
-        orig_mouse_coord_x, orig_mouse_coord_y = mouse_controller.get_mouse_coordinates()
+        (
+            orig_mouse_coord_x,
+            orig_mouse_coord_y,
+        ) = mouse_controller.get_mouse_coordinates()
         slot_coord = self.get_slot_coordinates()
         if not slot_coord:
             return

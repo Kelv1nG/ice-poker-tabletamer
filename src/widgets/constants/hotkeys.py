@@ -3,6 +3,7 @@ HOTKEYS_MAP = {
     "CHECK_CALL": "hk_check_call",
     "BET": "hk_bet",
     "RAISE": "hk_raise",
+    "ENABLE_DISABLE": "hk_enable_disable",
     "MOVE_TO_SLOT_1": "hk_move_to_slot_1",
     "MOVE_TO_SLOT_2": "hk_move_to_slot_2",
     "MOVE_TO_SLOT_3": "hk_move_to_slot_3",
@@ -15,8 +16,8 @@ HOTKEYS_MAP = {
     "MOVE_TO_SLOT_10": "hk_move_to_slot_10",
 }
 
-ALPHABET = [chr(i).upper() for i in range(ord('a'), ord('z')+1)]
-FKEYS = [f'F{i}' for i in range(1,13)]
+ALPHABET = [chr(i).upper() for i in range(ord("a"), ord("z") + 1)]
+FKEYS = [f"F{i}" for i in range(1, 13)]
 MOUSE_BUTTONS = [
     "Button.right",
     "Button.x1",
