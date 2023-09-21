@@ -17,6 +17,7 @@ pytest = "^7.4.0"
 PyGetWindow = "^0.0.9"
 psutil = "^5.9.5"
 pynput = "^1.7.6"
+pywin32 = "^306"
 
 
 [build-system]
