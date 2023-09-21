@@ -9,6 +9,7 @@ from .hotkeys_config import hotkey_configuration
 from .mouse_controller import mouse_controller
 
 import threading
+from . import constants
 
 
 class HotkeyManager:
@@ -18,6 +19,7 @@ class HotkeyManager:
     ):
         self.hotkey_configuration = hotkey_configuration
         self.keyboard_listener = None
+        self.mouse_listener = None
         self.key_to_action = {}
         self.relative_coordinates = {}
         self.thread = None
@@ -26,7 +28,27 @@ class HotkeyManager:
     def hotkeys(self):
         return self.hotkey_configuration.hotkeys
 
-    def win32_event_filter(self, msg, data):
+    def mouse_event_filter(self, msg, data):
+        """
+        if click is coming from user data.flags = 0
+        else if its done programmatically data.flags = 1
+
+        Returning False would mean events wont be propagated to the
+        rest of the system while suppress event completely suppresses the event
+        i.e right clicking browser
+
+        Additionally, actions related to suppressing browser interactions
+        are handled within this function.
+        """
+        if msg in constants.SUPPRESSED_EVENTS and self.mouse_listener:
+            button = constants.MOUSE_MESSAGE_DATA_TO_BUTTON_MAP.get((msg, data.mouseData), None)
+            if (action := self.get_action_from_button(button)):
+                self.start_action_thread(action)
+            self.mouse_listener.suppress_event()
+        if data.flags:
+            return False
+
+    def keyboard_event_filter(self, msg, data):
         if data.flags:
             return False
 
@@ -53,6 +75,12 @@ class HotkeyManager:
     def get_button_coordinate(
         self, slot_coordinate: tuple[int, int], button_type: Buttons
     ) -> tuple[int, int]:
+        """
+        calculates button coordinate given a slot_coordinate
+
+        returns:
+            tuple[int, int]: a tuple of (x, y) coordinates
+        """
         def get_absolute_coordinates(slot_coordinate, relative_coordinate):
             return (
                 slot_coordinate[0] + relative_coordinate[0],
@@ -64,7 +92,12 @@ class HotkeyManager:
 
     def get_slot_coordinates(self) -> tuple[int, int] | None:
         """
-        simulates left click and gets active window
+        Simulates a left click and retrieves the active window. If a slot is found within the window,
+        this function returns a tuple containing the (x, y) coordinates of the slot.
+
+        returns:
+            tuple[int, int] | None: A tuple of (x, y) coordinates if a slot is found,
+            or None if no slot is detected.
         """
         mouse_controller.left_click()
         window = WindowsSelector.get_active_window()
@@ -73,6 +106,17 @@ class HotkeyManager:
             if slot:
                 return slot.left, slot.top
         return None
+
+    def get_action_from_button(self, button) -> str | None:
+        action = self.key_to_action.get(str(button))
+        return action
+
+    def start_action_thread(self, action):
+        """
+        Start a new thread to handle the given action.
+        """
+        self.thread = threading.Thread(target=self.handle_action, args=(action,))
+        self.thread.start()
 
     def on_press(self, key):
         if hasattr(key, "char") and key.char is not None:
@@ -84,18 +128,17 @@ class HotkeyManager:
                 self.handle_action(action)
 
     def on_click(self, x, y, button, pressed):
-        if pressed and (action := self.key_to_action.get(str(button))):
-            self.thread = threading.Thread(target=self.handle_action, args=(action,))
-            self.thread.start()
+        if pressed and (action := self.get_action_from_button(button)):
+            self.start_action_thread(action)
 
     def start(self):
         self.update_relative_button_coordinates()
 
         self.keyboard_listener = keyboard.Listener(
-            on_press=self.on_press, win32_event_filter=self.win32_event_filter
+            on_press=self.on_press, win32_event_filter=self.keyboard_event_filter
         )
         self.mouse_listener = mouse.Listener(
-            on_click=self.on_click, win32_event_filter=self.win32_event_filter
+            on_click=self.on_click, win32_event_filter=self.mouse_event_filter
         )
         self.populate_reverse_hotkeys()
         self.keyboard_listener.start()
@@ -109,10 +152,13 @@ class HotkeyManager:
 
     def move_to_amount_field(self, slot_coord: tuple[int, int]):
         """
-        move the cursor to the amount field for a given slot.
+        move the cursor to the amount field associated with a given slot.
+
+        args:
+            slot_coord (tuple[int, int]): A tuple containing the (x, y) coordinates of the slot.
         """
-        button_coord = self.get_button_coordinate(slot_coord, button_type=Buttons.AMOUNT)
-        mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
+        button_coord_x, button_coord_y = self.get_button_coordinate(slot_coord, button_type=Buttons.AMOUNT)
+        mouse_controller.move_to_coordinates(button_coord_x, button_coord_y)
 
     def perform_base_action(
         self, button_type: Buttons, move_to_amount_field: bool = False
@@ -123,21 +169,21 @@ class HotkeyManager:
         simulates left click of button and moves the cursor afterwards whether the action
         requires to put in a desired amount
         """
-        orig_mouse_coord = mouse_controller.get_mouse_coordinates()
+        orig_mouse_coord_x, orig_mouse_coord_y = mouse_controller.get_mouse_coordinates()
         slot_coord = self.get_slot_coordinates()
         if not slot_coord:
             return
 
-        button_coord = self.get_button_coordinate(
+        button_coord_x, button_coord_y = self.get_button_coordinate(
             slot_coord, button_type=button_type
         )
-        mouse_controller.move_to_coordinates(button_coord[0], button_coord[1])
+        mouse_controller.move_to_coordinates(button_coord_x, button_coord_y)
         mouse_controller.left_click()
 
         if move_to_amount_field:
             self.move_to_amount_field(slot_coord)
         else:
-            mouse_controller.move_to_coordinates(orig_mouse_coord[0], orig_mouse_coord[1])
+            mouse_controller.move_to_coordinates(orig_mouse_coord_x, orig_mouse_coord_y)
 
     def perform_fold(self):
         self.perform_base_action(button_type=Buttons.FOLD)
