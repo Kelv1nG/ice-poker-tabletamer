@@ -36,8 +36,13 @@ def populate_selections(ui):
     for cbox_name in hk_constants.HOTKEYS_MAP.values():
         if hasattr(ui, cbox_name):
             input_ui = getattr(ui, cbox_name)
-            for hk_option in hk_constants.HOTKEY_OPTIONS:
-                input_ui.addItem(hk_option)
+            # alphabet only on toggle hotkeys
+            if cbox_name == 'hk_toggle_hotkeys':
+                for hk_option in hk_constants.ALPHABET:
+                    input_ui.addItem(hk_option)
+            else:
+                for hk_option in hk_constants.HOTKEY_OPTIONS:
+                    input_ui.addItem(hk_option)
 
 
 def save_settings(ui):

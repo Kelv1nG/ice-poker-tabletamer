@@ -1,9 +1,10 @@
 {
     "hotkey_configuration": {
-        "FOLD": "W",
-        "CHECK_CALL": "E",
-        "BET": "R",
-        "RAISE": "T",
+        "FOLD": "Button.right",
+        "CHECK_CALL": "Button.x1",
+        "BET": "Button.middle",
+        "RAISE": "Button.x2",
+        "TOGGLE_HOTKEYS": "A",
         "MOVE_TO_SLOT_1": "",
         "MOVE_TO_SLOT_2": "",
         "MOVE_TO_SLOT_3": "",

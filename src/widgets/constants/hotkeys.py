@@ -3,7 +3,7 @@ HOTKEYS_MAP = {
     "CHECK_CALL": "hk_check_call",
     "BET": "hk_bet",
     "RAISE": "hk_raise",
-    "ENABLE_DISABLE": "hk_enable_disable",
+    "TOGGLE_HOTKEYS": "hk_toggle_hotkeys",
     "MOVE_TO_SLOT_1": "hk_move_to_slot_1",
     "MOVE_TO_SLOT_2": "hk_move_to_slot_2",
     "MOVE_TO_SLOT_3": "hk_move_to_slot_3",
