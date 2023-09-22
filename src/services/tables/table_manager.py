@@ -165,6 +165,15 @@ class SlotManager:
             center_coordinates[slot_num] = slot.slot_center_coordinates
         return center_coordinates
 
+    def get_center_for_slot(self, slot_num: str) -> tuple[int, int]:
+        """
+        returns y,x coordinate
+        """
+        try:
+            return self._slots[slot_num].slot_center_coordinates
+        except KeyError:
+            raise exceptions.InvalidSlotNum
+
     def get_slot_from_window(self, window: gw.Window) -> Slot | None:
         for slot in self.slots.values():
             if slot.window == window:

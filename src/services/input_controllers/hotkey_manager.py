@@ -10,16 +10,20 @@ from services.utilities import WindowsSelector
 from . import constants
 from .hotkeys_config import hotkey_configuration
 from .mouse_controller import mouse_controller
+from .entities import KeyActions
 
 
 class HotkeyManager:
     def __init__(self, hotkey_configuration=hotkey_configuration):
         self.hotkey_configuration = hotkey_configuration
+        self.toggle_hotkeys_listener = None
         self.keyboard_listener = None
         self.mouse_listener = None
         self.key_to_action = {}
         self.relative_coordinates = {}
         self.thread = None
+
+        self.initialize_toggle_hotkeys_listener()
 
     @property
     def hotkeys(self):
@@ -35,7 +39,9 @@ class HotkeyManager:
         i.e right clicking browser
 
         Additionally, actions related to suppressing browser interactions
-        are handled within this function.
+        are handled within this function
+
+        Actions are started in a separate thread to avoid risks freezing input for all processes
         """
         if msg in constants.SUPPRESSED_EVENTS and self.mouse_listener:
             button = constants.MOUSE_MESSAGE_DATA_TO_BUTTON_MAP.get(
@@ -44,6 +50,7 @@ class HotkeyManager:
             if action := self.get_action_from_button(button):
                 self.start_action_thread(action)
             self.mouse_listener.suppress_event()
+
         if data.flags:
             return False
 
@@ -53,7 +60,20 @@ class HotkeyManager:
 
     def populate_reverse_hotkeys(self):
         """
-        map and store the hotkey to an action for accessing it later on
+        Populates a reverse hotkey mapping to store the hotkey-to-action relationship for later access.
+
+        This method creates a dictionary that maps action strings to their corresponding hotkeys. It also ensures that
+        all hotkeys are represented in uppercase for consistency.
+
+        Returns:
+            None
+
+        Example:
+            Suppose the 'hotkeys' attribute contains the following mapping:
+            {'A': 'Fold', 'B': 'Call'}
+
+            After calling this method, 'self.key_to_action' will be updated to:
+            {'Fold': 'A', 'Call': 'B'}
         """
         self.key_to_action = {value: key for key, value in self.hotkeys.items()}
         for key, value in self.key_to_action.items():
@@ -112,6 +132,15 @@ class HotkeyManager:
         action = self.key_to_action.get(str(button))
         return action
 
+    def get_action_from_key(self, key) -> str | None:
+        if hasattr(key, "char") and key.char is not None:
+            key_char = key.char
+            action = self.key_to_action.get(
+                key_char.upper(), self.key_to_action.get(key_char, None)
+            )
+            return action
+        return None
+
     def start_action_thread(self, action):
         """
         Start a new thread to handle the given action.
@@ -120,13 +149,9 @@ class HotkeyManager:
         self.thread.start()
 
     def on_press(self, key):
-        if hasattr(key, "char") and key.char is not None:
-            key_char = key.char
-            action = self.key_to_action.get(
-                key_char.upper(), self.key_to_action.get(key_char, None)
-            )
-            if action:
-                self.handle_action(action)
+        action = self.get_action_from_key(key)
+        if action:
+            self.handle_action(action)
 
     def on_click(self, x, y, button, pressed):
         if pressed and (action := self.get_action_from_button(button)):
@@ -213,6 +238,25 @@ class HotkeyManager:
                 self.perform_bet()
             case Buttons.RAISE.value:
                 self.perform_raise()
+                
+    def initialize_toggle_hotkeys_listener(self):
+        self.populate_reverse_hotkeys()
+        def on_press(key):
+            action = self.get_action_from_key(key)
+            if action == KeyActions.TOGGLE_HOTKEYS.value:
+                if self.keyboard_listener is None:
+                    self.enable_hotkeys()
+                else:
+                    self.disable_hotkeys()
+        self.toggle_hotkeys_listener = keyboard.Listener(on_press=on_press)
+        self.toggle_hotkeys_listener.start()
+
+    def enable_hotkeys(self):
+        self.start()
+
+    def disable_hotkeys(self):
+        self.stop()
+
 
 
 hotkey_manager = HotkeyManager(hotkey_configuration=hotkey_configuration)
