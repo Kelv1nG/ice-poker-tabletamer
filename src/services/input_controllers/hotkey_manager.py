@@ -171,10 +171,12 @@ class HotkeyManager:
         self.mouse_listener.start()
 
     def stop(self):
-        self.keyboard_listener.stop()
-        self.keyboard_listener = None
-        self.mouse_listener.stop()
-        self.mouse_listener = None
+        if self.keyboard_listener:
+            self.keyboard_listener.stop()
+            self.keyboard_listener = None
+        if self.mouse_listener:
+            self.mouse_listener.stop()
+            self.mouse_listener = None
 
     def move_to_amount_field(self, slot_coord: tuple[int, int]):
         """
@@ -238,7 +240,7 @@ class HotkeyManager:
                 self.perform_bet()
             case Buttons.RAISE.value:
                 self.perform_raise()
-                
+
     def initialize_toggle_hotkeys_listener(self):
         self.populate_reverse_hotkeys()
         def on_press(key):

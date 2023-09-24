@@ -3,19 +3,19 @@
         "table_count": 4,
         "table_configurations": {
             "slot_1": {
-                "top": 119,
-                "left": 56
+                "top": 0,
+                "left": 39
             },
             "slot_2": {
-                "top": 33,
+                "top": 1,
                 "left": 540
             },
             "slot_3": {
-                "top": 34,
+                "top": 2,
                 "left": 918
             },
             "slot_4": {
-                "top": 32,
+                "top": 0,
                 "left": 1389
             }
         }

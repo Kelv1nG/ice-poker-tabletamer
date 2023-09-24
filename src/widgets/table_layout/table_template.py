@@ -2,6 +2,7 @@ from PyQt6 import QtCore
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
+TITLE_BAR_OFFSET = 30
 
 class TableTemplate(QWidget):
     def __init__(
@@ -14,7 +15,7 @@ class TableTemplate(QWidget):
     ):
         super().__init__()
         self.number_label = number_label
-        self.setGeometry(left, top, table_width, table_height)
+        self.setGeometry(left, top + TITLE_BAR_OFFSET, table_width, table_height)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint)
         self.setWindowTitle(
