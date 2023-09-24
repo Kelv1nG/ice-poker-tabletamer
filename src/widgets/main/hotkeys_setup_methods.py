@@ -39,10 +39,10 @@ def populate_selections(ui):
             # alphabet only on toggle hotkeys
             if cbox_name == 'hk_toggle_hotkeys':
                 for hk_option in hk_constants.ALPHABET:
-                    input_ui.addItem(hk_option)
+                    input_ui.addItem(str(hk_option))
             else:
                 for hk_option in hk_constants.HOTKEY_OPTIONS:
-                    input_ui.addItem(hk_option)
+                    input_ui.addItem(str(hk_option))
 
 
 def save_settings(ui):

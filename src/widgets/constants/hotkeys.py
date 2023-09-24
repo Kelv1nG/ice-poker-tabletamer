@@ -17,6 +17,7 @@ HOTKEYS_MAP = {
 }
 
 ALPHABET = [chr(i).upper() for i in range(ord("a"), ord("z") + 1)]
+NUMBERS = [i for i in range(0,10)]
 FKEYS = [f"F{i}" for i in range(1, 13)]
 MOUSE_BUTTONS = [
     "Button.right",
@@ -25,4 +26,4 @@ MOUSE_BUTTONS = [
     "Button.middle",
 ]
 
-HOTKEY_OPTIONS = ["-"] + MOUSE_BUTTONS + ALPHABET
+HOTKEY_OPTIONS = ["-"] + MOUSE_BUTTONS + ALPHABET + NUMBERS
