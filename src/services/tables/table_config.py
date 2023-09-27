@@ -1,6 +1,8 @@
 import pyautogui
 
 from utils.configuration_parser import IConfigurationParser, TableConfigurationParser
+from ..utilities import WindowsSelector
+from ..tables.entities import AppName
 
 from . import exceptions
 from .entities import Buttons
@@ -73,9 +75,11 @@ class TableConfiguration:
         table_name: application name to be grabbed
         """
         try:
-            self.table = pyautogui.getWindowsWithTitle(table_name)[0]
+            windows = WindowsSelector.get_windows_by_app_name(app_name=AppName.CHROME)
+            self.table = WindowsSelector.filter_windows_by_tab_title(table_name, windows)[0]
+            # pyautogui.getwindowswithTitle(table_name)[0]
             # bring table to top by using activate
-            self.table.activate()
+            # self.table.activate()
         except IndexError:
             raise exceptions.NoTableFound
         else:

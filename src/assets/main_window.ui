@@ -1017,7 +1017,7 @@ QPushButton:pressed {
          </rect>
         </property>
         <property name="text">
-         <string>Curb Your Tables v.0.1.0a</string>
+         <string>Curb Your Tables v.0.2.0a</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_7">
