@@ -1,5 +1,6 @@
 import enum
 
+
 class KeyStates:
     _instance = None
 
@@ -14,7 +15,7 @@ class KeyStates:
 
 
 class KeyActions(enum.Enum):
-    TOGGLE_HOTKEYS = 'TOGGLE_HOTKEYS'
+    TOGGLE_HOTKEYS = "TOGGLE_HOTKEYS"
 
 
 key_states = KeyStates()

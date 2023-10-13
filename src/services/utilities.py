@@ -23,10 +23,10 @@ class WindowsSelector:
         return [
             window
             for window in process_windows
-            if WindowsSelector.get_active_tab_title(
+            if tab_title
+            in WindowsSelector.get_active_tab_title(
                 app_name=AppName.CHROME, process_window=window
             )
-            == tab_title
         ]
 
     @staticmethod

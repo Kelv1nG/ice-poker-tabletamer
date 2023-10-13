@@ -8,9 +8,9 @@ from services.tables.table_manager import table_manager
 from services.utilities import WindowsSelector
 
 from . import constants
+from .entities import KeyActions
 from .hotkeys_config import hotkey_configuration
 from .mouse_controller import mouse_controller
-from .entities import KeyActions
 
 
 class HotkeyManager:
@@ -243,6 +243,7 @@ class HotkeyManager:
 
     def initialize_toggle_hotkeys_listener(self):
         self.populate_reverse_hotkeys()
+
         def on_press(key):
             action = self.get_action_from_key(key)
             if action == KeyActions.TOGGLE_HOTKEYS.value:
@@ -250,6 +251,7 @@ class HotkeyManager:
                     self.enable_hotkeys()
                 else:
                     self.disable_hotkeys()
+
         self.toggle_hotkeys_listener = keyboard.Listener(on_press=on_press)
         self.toggle_hotkeys_listener.start()
 
@@ -258,7 +260,6 @@ class HotkeyManager:
 
     def disable_hotkeys(self):
         self.stop()
-
 
 
 hotkey_manager = HotkeyManager(hotkey_configuration=hotkey_configuration)

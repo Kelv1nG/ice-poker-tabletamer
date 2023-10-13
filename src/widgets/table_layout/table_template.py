@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout, QWidg
 
 TITLE_BAR_OFFSET = 30
 
+
 class TableTemplate(QWidget):
     def __init__(
         self,

@@ -37,7 +37,7 @@ def populate_selections(ui):
         if hasattr(ui, cbox_name):
             input_ui = getattr(ui, cbox_name)
             # alphabet only on toggle hotkeys
-            if cbox_name == 'hk_toggle_hotkeys':
+            if cbox_name == "hk_toggle_hotkeys":
                 for hk_option in hk_constants.ALPHABET:
                     input_ui.addItem(str(hk_option))
             else:

@@ -58,7 +58,7 @@ class TableLayOutManager(Generic[T]):
         table_configurations = dict()
         for index, table in enumerate(self.table_templates):
             table_configurations["slot_" + str(index + 1)] = {
-                "top": table.frameGeometry().top(), # this includes the title bar
+                "top": table.frameGeometry().top(),  # this includes the title bar
                 "left": table.frameGeometry().left(),
                 # "top": table.geometry().top(),
                 # "left": table.geometry().left(),
